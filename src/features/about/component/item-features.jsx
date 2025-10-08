@@ -23,7 +23,7 @@ export function ItemFeature({ title, desc, children }) {
         },
       }}
     >
-      {/* أيقونة داخل دائرة */}
+      {/* Icon */}
       <Box
         sx={{
           width: 110,
@@ -57,7 +57,7 @@ export function ItemFeature({ title, desc, children }) {
         </Box>
       </Box>
 
-      {/* العنوان */}
+      {/* Address */}
       <Typography
         variant="h6"
         fontWeight={700}
@@ -70,7 +70,7 @@ export function ItemFeature({ title, desc, children }) {
         {title}
       </Typography>
 
-      {/* الوصف */}
+      {/* Description*/} 
       <Typography
         variant="body1"
         color="text.secondary"

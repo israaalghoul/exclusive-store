@@ -26,7 +26,7 @@ export function ItemInfo({ icon, number, title }) {
         },
       }}
     >
-      {/* دائرة الأيقونة */}
+      {/* Icon*/}
       <Box
         sx={{
           width: 110,
@@ -60,7 +60,7 @@ export function ItemInfo({ icon, number, title }) {
         </Box>
       </Box>
 
-      {/* الرقم */}
+      {/* Number*/}
       <Typography
         variant="h4"
         fontWeight={700}
@@ -69,7 +69,7 @@ export function ItemInfo({ icon, number, title }) {
         {number}k
       </Typography>
 
-      {/* العنوان */}
+      {/* Address*/}
       <Typography
         variant="h6"
         fontWeight={600}

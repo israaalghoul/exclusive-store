@@ -16,7 +16,7 @@ export function Person({ name, job, img }) {
         },
       }}
     >
-      {/* الصورة */}
+      {/*Img*/}
       <Box
         sx={{
           backgroundColor: "divider",
@@ -41,7 +41,7 @@ export function Person({ name, job, img }) {
         />
       </Box>
 
-      {/* النصوص */}
+      {/* Texts*/}
       <CardContent sx={{ textAlign: "center", pt: 3 }}>
         <Typography
           variant="h6"
@@ -54,7 +54,7 @@ export function Person({ name, job, img }) {
           {job}
         </Typography>
 
-        {/* روابط التواصل */}
+        {/* Links*/}
         <Box display="flex" justifyContent="center" gap={1.5}>
           <IconButton size="small" color="primary">
             <Twitter size={18} />
