@@ -25,8 +25,10 @@ import React, { useState } from "react";
 const SaleBar = styled(Box)(({ theme }) => ({
   ...styleNavSale.saleBarStyle(theme),
 }));
-const AppBarStyle = styled(AppBar)(({ theme }) => ({
+const AppBarStyle = styled(AppBar)(({ theme,open }) => ({
   ...styleNavApp.appBarStyle(theme),
+   transition: "margin-top 0.3s ease-in-out",
+  marginTop: open ? 0 : -48,
 }));
 
 export function Navbar() {
@@ -56,7 +58,7 @@ export function Navbar() {
     location.pathname === "/sign-up" || location.pathname === "/login";
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, pt: open? "130px": "85px" }}>
       <Collapse in={open}>
         <SaleBar onClick={() => setOpen(false)}>
           <div>
@@ -96,13 +98,14 @@ export function Navbar() {
       {!open && (
         <TopIcon
           onClick={handleOpenSaleBar}
-          position={"absolute"}
-          top={10}
-          right={10}
+          position={"fixed"}
+          top={25}
+          right={25}
+          zIndex={theme.zIndex.tooltip + 3}
         />
       )}
 
-      <AppBarStyle position="static">
+      <AppBarStyle open={open}>
         <Container
           maxWidth={false}
           disableGutters

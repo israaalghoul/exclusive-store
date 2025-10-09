@@ -11,8 +11,12 @@ export const styleNavSale = {
     alignItems: "center",
     justifyContent: "center",
     gap: "1.3rem",
-    position: "relative",
+    position: "fixed",
     cursor: "pointer", 
+    top: 0,
+  left: 0,
+  right: 0,
+     zIndex: theme.zIndex.appBar + 2,
     ///////////// RESPONSIVE //////////////
     "@media (max-width: 320px)": {
       flexDirection: "column",
@@ -36,10 +40,12 @@ export const styleNavSale = {
   }),
   ///////////////////////////////////SHOP BTN STYLE
   shopBtnStyle: {
+    position: "fixed",
     alignItems: "center",
     textDecoration: "underline",
     fontSize: 14,
     fontWeight: 600,
+   
     ///////////// RESPONSIVE //////////////
     "@media (min-width: 768px)": {
       fontSize: "1.2rem",

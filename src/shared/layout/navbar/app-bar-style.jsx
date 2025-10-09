@@ -1,11 +1,15 @@
 import { alpha } from "@mui/material/styles";
 export const styleNavApp = {
   /////////////////////////////////// APP BAR STYLE
-  appBarStyle: (theme) => ({
+  appBarStyle: (theme,open) => ({
     background: theme.palette.background.paper,
     color: theme.palette.text.primary,
     boxShadow: "none",
     borderBottom: `0.5px solid ${alpha(theme.palette.divider, 0.3)}`,
+    position:"fixed",
+     top: "35px", 
+  zIndex: theme.zIndex.appBar + 1,
+  //  marginTop: open ? 0 : -48,
   }),
   /////////////////////////////////// CONTAINER APP BAR STYLE
   containerAppBarStyle: {
@@ -14,7 +18,8 @@ export const styleNavApp = {
     justifyContent: "space-between",
     alignItems: "center",
     margin: 0,
-    
+    top: "48px",
+    zIndex: (theme) => theme.zIndex.drawer + 1,
 
     ///////////// RESPONSIVE //////////////
     "@media (max-width: 320px)": {

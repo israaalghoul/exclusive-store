@@ -1,18 +1,79 @@
-import { useNavigate } from "react-router";
 import { appRoutes } from "../../routes";
+import { Box, Button, Typography, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Breadcrumbs, Link } from "@mui/material";
+export default function NotFoundPage() {
+  const navigate = useNavigate();
+  return (
+    <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, py: { xs: 2, md: 10 } }}>
+      {/* ===== Breadcrumb ===== */}
+      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
+        <Link
+          underline="hover"
+          color="inherit"
+          href={appRoutes.home}
+          style={{ fontSize: "1.4rem" }}
+        >
+          Home
+        </Link>
+        <Typography color="text.primary" sx={{ fontSize: "1.4rem" }}>
+          CheckOut
+        </Typography>
+      </Breadcrumbs>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: "110px",
+            fontWeight: 500,
+            mb: 2,
+          }}
+        >
+          404 Not Found
+        </Typography>
 
-const style = { display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center', alignItems: 'center', height: '100%', minHeight: '50vh', width: '100%' }
-const titleStyle = { fontSize: '4rem', color: '#fff' };
-const buttonStyle = { padding: '10px', borderRadius: '8px' }
+        <Typography
+          variant="body1"
+          sx={{
+            fontSize: "16px",
+            fontWeight: 400,
+            color: "#666666",
+            mb: 4,
+          }}
+        >
+          Your visited page not found. You may go home page.
+        </Typography>
 
-function NotFoundPage() {
-    const navigate = useNavigate()
-    return (
-        <div style={style}>
-            <h1 style={titleStyle}>Oops (: 404 Page not found.</h1>
-            <button style={buttonStyle} onClick={() => navigate(appRoutes.home)}>Back to home</button>
-        </div>
-    )
+        <Button
+          variant="contained"
+          onClick={() => navigate("/")}
+          sx={{
+            width: "254px",
+            height: "56px",
+            backgroundColor: "#DB4444",
+            color: "#FAFAFA",
+            fontSize: "16px",
+            fontWeight: 500,
+            textTransform: "none",
+            borderRadius: "4px",
+            "&:hover": {
+              backgroundColor: "#b73737",
+            },
+          }}
+        >
+          Back to home page
+        </Button>
+      </Container>
+    </Box>
+  );
 }
-
-export default NotFoundPage;
