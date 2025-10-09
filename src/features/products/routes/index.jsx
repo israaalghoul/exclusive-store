@@ -14,14 +14,5 @@ export const productsRoutes = [
 
  
   },
-  {
-    path: "/products/form", // Ex: my-app.com/products/form
-    element: (
-      <AuthPageGuard>
-   
-          <ProductFormPage />
-   
-      </AuthPageGuard>
-    )
-  },
+
 ]

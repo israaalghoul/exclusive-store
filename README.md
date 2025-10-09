@@ -133,7 +133,6 @@ The application uses JSON Server for mock data. Available endpoints:
 
 ### Product Management
 - **Product List**: Displays all products with loading states and error handling
-- **Product Form**: Create and edit products with validation
 - **Product Search**: Real-time search with debounced input
 - **Product Details**: Individual product view
 
