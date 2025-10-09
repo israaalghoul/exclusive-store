@@ -3,11 +3,11 @@ import { lazy } from 'react'
 import { AuthPageGuard } from '../../auth/guards/auth-guard'
 
 const ProductsPage = lazy(() => import('../pages'))
-const ProductFormPage = lazy(() => import('../pages/form'))
+
 
 export const productsRoutes = [
   {
-    path: "/products", // Ex: my-app.com/products
+    path: "/products", 
     element:
 
         <ProductsPage />
