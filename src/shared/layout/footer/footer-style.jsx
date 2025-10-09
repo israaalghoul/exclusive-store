@@ -50,7 +50,7 @@ export const styleFooter = {
   }),
   /////////////////////////////////// INPUT FIELD STYLE
   inputFieldStyle: (theme) => ({
-    border: "none",
+    // border: "none",
     outline: "none",
     "& fieldset": { border: "none" },
     marginTop: theme.spacing(2),

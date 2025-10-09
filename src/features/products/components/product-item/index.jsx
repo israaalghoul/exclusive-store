@@ -175,7 +175,7 @@ export function ProductItem({
             sx={{
               width: "100%",
               height: 250,
-              objectFit: "contain",
+              // objectFit: "contain",
               bgcolor: "#f5f5f5",
               objectFit: "cover",
             }}
