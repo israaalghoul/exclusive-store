@@ -5,7 +5,7 @@ A modern React-based e-commerce application built with Vite, featuring product m
 
 ## 🚀 Features
 
-- **Product Management**: View, search, and manage products with CRUD operations
+- **Product Management**: View, search, and manage products
 - **Search Functionality**: Real-time product search with debounced input
 - **User Authentication**: User management and authentication system
 - **Responsive Design**: Modern UI with responsive layout
@@ -27,6 +27,8 @@ A modern React-based e-commerce application built with Vite, featuring product m
 - **Yup 1.7.0** - Schema validation
 - **Axios 1.11.0** - HTTP client
 - **React Toastify 11.0.5** - Toast notifications
+- **React Toastify 11.0.5** - Toast notifications
+- **MUI Material 7.3.2** - UI
 
 ### Development Tools
 - **ESLint** - Code linting
@@ -45,7 +47,6 @@ src/
 │   │   └── routes/           # Home routes
 │   ├── products/             # Products feature
 │   │   ├── components/       # Product-related components
-│   │   │   ├── product-form/ # Product form component
 │   │   │   ├── product-item/ # Individual product display
 │   │   │   ├── product-list/ # Product listing
 │   │   │   └── products-section/ # Products section
@@ -126,11 +127,7 @@ The application uses JSON Server for mock data. Available endpoints:
 
 - `GET /products` - Get all products
 - `GET /products/:id` - Get product by ID
-- `POST /products` - Create new product
-- `PUT /products/:id` - Update product
-- `DELETE /products/:id` - Delete product
-- `GET /users` - Get all users
-- `GET /users/:id` - Get user by ID
+
 
 ## 🎯 Key Features Implementation
 
