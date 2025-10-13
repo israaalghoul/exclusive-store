@@ -2,27 +2,28 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { dataStorage } from "../../../lib/storage";
 import { v4 as uuidv4 } from "uuid";
 
-const CartContext = createContext();
+const WishlistContext = createContext();
 
-export function CartProvider({ children }) {
-  const cartStorage = dataStorage("cart");
+export function WishlistProvider({ children }) {
+  const wishlistStorage = dataStorage("wishlist");
   const normalizeId = (id) => {
     if (id === undefined || id === null) return null;
     return typeof id === "object" ? id?.id ?? JSON.stringify(id) : String(id);
   };
 
-  const [cart, setCart] = useState(() => {
-    const saved = cartStorage.get();
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = wishlistStorage.get();
     if (!Array.isArray(saved)) return [];
+    // normalize any stored ids to strings to avoid object coercion issues
     return saved.map((it) => ({ ...it, id: normalizeId(it.id) }));
   });
   const [isOpen, setIsOpen] = useState(false);
 
 
-  const addToCart = ({ ...product }) => {
+  const addToWishlist = ({ ...product }) => {
     const normId = normalizeId(product.id) || uuidv4();
     const productWithId = { id: normId, ...product };
-    setCart((prev) => {
+    setWishlist((prev) => {
       const existing = prev.find((item) => item.id === productWithId.id);
       if (existing) {
         return prev.map((item) =>
@@ -35,45 +36,19 @@ export function CartProvider({ children }) {
     });
   };
 
-  // const categoryImages = (id)=>{
-  //       setCart((prev) =>
-  //         prev.flatMap ((item) =>
-  //          item.category?.images || []
-  //     ));
-  // }
 
 
-  const increaseQty = (id) => {
+  const removeFromWishlist = (id) => {
     const norm = normalizeId(id);
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === norm ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+    setWishlist((prev) => prev.filter((item) => item.id !== norm));
   };
 
-  const decreaseQty = (id) => {
-    const norm = normalizeId(id);
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === norm && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  const removeFromCart = (id) => {
-    const norm = normalizeId(id);
-    setCart((prev) => prev.filter((item) => item.id !== norm));
-  };
-
-  const clearCart = () => setCart([]);
+  const clearWishlist = () => setWishlist([]);
   useEffect(() => {
-    cartStorage.set(cart);
-  }, [cart]);
+    wishlistStorage.set(wishlist);
+  }, [wishlist]);
 
-  const totalPrice = cart.reduce((sum, item) => {
+  const totalPrice = wishlist.reduce((sum, item) => {
     const priceNumber = Number(String(item.price).replace(/[^\d.]/g, ""));
     const unit = Number.isFinite(priceNumber) ? Math.ceil(priceNumber) : 0;
     return sum + unit * item.quantity;
@@ -82,26 +57,24 @@ export function CartProvider({ children }) {
   const closeCart = () => setIsOpen(false);
 
   return (
-    <CartContext.Provider
+    <WishlistContext.Provider
       value={{
-        cart,
-        addToCart,
-        increaseQty,
-        decreaseQty,
-        removeFromCart,
-        clearCart,
+        wishlist,
+        addToWishlist,
+        removeFromWishlist,
+        clearWishlist,
         totalPrice,
         isOpen,
         openCart,
         closeCart,
-        // categoryImages,
+
       }}
     >
       {children}
-    </CartContext.Provider>
+    </WishlistContext.Provider>
   );
 }
 
-export function useCart() {
-  return useContext(CartContext);
+export function useWishlist() {
+  return useContext(WishlistContext);
 }

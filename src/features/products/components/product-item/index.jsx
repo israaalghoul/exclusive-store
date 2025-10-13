@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { useCart } from "../../store/cart";
+import { useWishlist } from "../../../wishlist/store/index";
 import { useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -28,9 +29,15 @@ export function ProductItem({
   reviews = 75,
   showOffer = true,
   offerColor = "custom.btnPrimary.main",
+  // compact mode hides rating/reviews and the default fav/details icons
+  compact = false,
+  // optional React node to render instead of the default action icons
+  actionIcon = null,
+  // optional callback fired after the product is added to cart
+  onAddedToCart = null,
 }) {
   const theme = useTheme();
-  const [isFavorite, setIsFavorite] = useState(false);
+  // removed local isFavorite; use wishlist store to track
 
   const resolvedColor = offerColor.includes(".")
     ? offerColor.split(".").reduce((acc, key) => acc?.[key], theme.palette)
@@ -46,21 +53,52 @@ export function ProductItem({
     : price;
 
   const { addToCart } = useCart();
+  const { cart, removeFromCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
  const navigate = useNavigate();
   const handleAddToFav = () => {
-    setIsFavorite((prev) => !prev);
+    // toggle wishlist: add if not present, remove if present
+    const productId = id || uuidv4();
+    const exists = wishlist.find((w) => String(w.id) === String(id));
+    if (exists) {
+      removeFromWishlist(id);
+      toast.warning("Removed from wishlist");
+    } else {
+      addToWishlist({ id: productId, name: title, images, price });
+      toast.success("Added to wishlist");
+    }
   };
 
   const handleAddToCart = () => {
-    toast.success("Porduct add successfully");
-
+    const productId = id || uuidv4();
+    toast.success("Product added to cart");
     addToCart({
-     id: uuidv4(),
+      id: productId,
       name: title,
       images,
       price,
     });
+    if (typeof onAddedToCart === "function" && compact) {
+      try {
+        onAddedToCart(productId);
+      } catch (err) {
+        // swallow callback errors to avoid breaking UI
+        // eslint-disable-next-line no-console
+        console.error("onAddedToCart callback error", err);
+      }
+    }
   };
+  const handleRemoveFromCart = () => {
+    // prefer to remove by the product id prop when available
+    const productId = id;
+    if (!productId) return;
+    removeFromCart(productId);
+    toast.warning("Product removed from cart");
+    // ensure Add To Cart control is visible after removal
+    setHover(true);
+  };
+
+  const inCart = Boolean(cart.find((c) => String(c.id) === String(id)));
   return (
     <Card
       sx={{ width: 270, boxShadow: "none", backgroundColor: "transparent" }}
@@ -99,72 +137,88 @@ export function ProductItem({
           </Box>
         )}
 
-        {/* Favorite and Eye Icons */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 12,
-            right: 12,
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-            zIndex: 1,
-          }}
-        >
-          <IconButton
-            size="small"
-            onClick={handleAddToFav}
-            sx={(theme) => ({
+        {/* Favorite and Eye Icons (or custom action in compact mode) */}
+        {!compact ? (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 12,
+              right: 12,
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 32,
-              height: 32,
-              transition: "color 0.3s ease",
-              backgroundColor: "#fff",
-              "& .MuiSvgIcon-root": {
-                fontSize: 24,
-                transition: "all 0.3s ease",
-              },
-              "&:hover": {
+              flexDirection: "column",
+              gap: 1,
+              zIndex: 1,
+            }}
+          >
+            <IconButton
+              size="small"
+              onClick={handleAddToFav}
+              sx={(theme) => ({
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 32,
+                height: 32,
+                transition: "color 0.3s ease",
                 backgroundColor: "#fff",
-              },
-            })}
-          >
-            {isFavorite ? (
-              <FavoriteIcon
-                sx={(theme) => ({
-                  color: theme.palette.custom.btnPrimary.main,
-                })}
-              />
-            ) : (
-              <FavoriteBorderIcon />
-            )}
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => navigate(appRoutes.detailsProduct)}
-            sx={(theme) => ({
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 32,
-              height: 32,
-              transition: "color 0.3s ease",
-              backgroundColor: "#fff",
-              "& .MuiSvgIcon-root": {
-                fontSize: 24,
-                transition: "all 0.3s ease",
-              },
-              "&:hover": {
-                backgroundColor: theme.palette.custom.btnPrimary.main,
-                color: "#fff",
-              },
-            })}
-          >
-            <VisibilityOutlinedIcon />
-          </IconButton>
-        </Box>
+                "& .MuiSvgIcon-root": {
+                  fontSize: 24,
+                  transition: "all 0.3s ease",
+                },
+                "&:hover": {
+                  backgroundColor: theme.palette.custom.btnPrimary.main,
+                  color: "#fff",
+                },
+              })}
+            >
+              {wishlist.find((w) => String(w.id) === String(id)) ? (
+                <FavoriteIcon
+                  sx={(theme) => ({
+                    color: theme.palette.custom.btnPrimary.main,
+                  })}
+                />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
+            </IconButton>
+            <IconButton
+              size="small"
+              onClick={() => navigate(appRoutes.detailsProduct)}
+              sx={(theme) => ({
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 32,
+                height: 32,
+                transition: "color 0.3s ease",
+                backgroundColor: "#fff",
+                "& .MuiSvgIcon-root": {
+                  fontSize: 24,
+                  transition: "all 0.3s ease",
+                },
+                "&:hover": {
+                  backgroundColor: theme.palette.custom.btnPrimary.main,
+                  color: "#fff",
+                },
+              })}
+            >
+              <VisibilityOutlinedIcon />
+            </IconButton>
+          </Box>
+        ) : (
+          actionIcon && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 12,
+                right: 12,
+                zIndex: 1,
+              }}
+            >
+              {actionIcon}
+            </Box>
+          )
+        )}
 
         {/* Product Image */}
         <Box sx={{ position: "relative" }}>
@@ -181,23 +235,23 @@ export function ProductItem({
             }}
           />
 
-          {/* Add To Cart Button */}
-          {hover && (
+          {/* Add / Remove Button */}
+          {inCart ? (
             <Box
-              sx={{
+              sx={(theme)=>({
                 position: "absolute",
                 bottom: 0,
                 width: "100%",
                 height: "4.1rem",
-                bgcolor: "black",
+                bgcolor:theme.palette.custom.btnPrimary.main,
                 color: "white",
                 textAlign: "center",
                 borderBottomLeftRadius: "0.4rem",
                 borderBottomRightRadius: "0.4rem",
-              }}
+              })}
             >
               <Button
-                onClick={handleAddToCart}
+                onClick={handleRemoveFromCart}
                 disableElevation
                 sx={{
                   width: "100%",
@@ -206,9 +260,38 @@ export function ProductItem({
                   padding: "0.8rem 0",
                 }}
               >
-                Add To Cart
+                Remove From Cart
               </Button>
             </Box>
+          ) : (
+            hover && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  width: "100%",
+                  height: "4.1rem",
+                  bgcolor: "black",
+                  color: "white",
+                  textAlign: "center",
+                  borderBottomLeftRadius: "0.4rem",
+                  borderBottomRightRadius: "0.4rem",
+                }}
+              >
+                <Button
+                  onClick={handleAddToCart}
+                  disableElevation
+                  sx={{
+                    width: "100%",
+                    color: "white",
+                    textTransform: "none",
+                    padding: "0.8rem 0",
+                  }}
+                >
+                  Add To Cart
+                </Button>
+              </Box>
+            )
           )}
         </Box>
 

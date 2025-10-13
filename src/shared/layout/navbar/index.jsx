@@ -7,6 +7,7 @@ import { useMenuStore } from "../../../features/account-menu/store";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "../../../features/products/store/cart";
+import { useWishlist } from "../../../features/wishlist/store";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { AppLogo } from "../../components/app-logo";
 import Container from "@mui/material/Container";
@@ -25,9 +26,9 @@ import React, { useState } from "react";
 const SaleBar = styled(Box)(({ theme }) => ({
   ...styleNavSale.saleBarStyle(theme),
 }));
-const AppBarStyle = styled(AppBar)(({ theme,open }) => ({
+const AppBarStyle = styled(AppBar)(({ theme, open }) => ({
   ...styleNavApp.appBarStyle(theme),
-   transition: "margin-top 0.3s ease-in-out",
+  transition: "margin-top 0.3s ease-in-out",
   marginTop: open ? 0 : -48,
 }));
 
@@ -35,7 +36,9 @@ export function Navbar() {
   const theme = useTheme();
   const [hovered, setHovered] = useState(false);
   const { cart, openCart } = useCart();
+  const { wishlist, openWishlist } = useWishlist();
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const countWishlist = wishlist.reduce((sum, item) => sum + item.quantity, 0);
   const { openMenu } = useMenuStore();
 
   //
@@ -54,11 +57,14 @@ export function Navbar() {
     // window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const location = useLocation();
+  // normalize pathname: remove trailing slash
+  const normalizedPath = location.pathname.replace(/\/+$/, "");
   const hideIcons =
-    location.pathname === "/sign-up" || location.pathname === "/login";
+    normalizedPath === appRoutes.auth.signUp ||
+    normalizedPath === appRoutes.auth.login;
 
   return (
-    <Box sx={{ flexGrow: 1, pt: open? "130px": "85px" }}>
+    <Box sx={{ flexGrow: 1, pt: open ? "130px" : "85px" }}>
       <Collapse in={open}>
         <SaleBar onClick={() => setOpen(false)}>
           <div>
@@ -123,7 +129,12 @@ export function Navbar() {
               <Button variant="link" onClick={() => navigate(appRoutes.home)}>
                 Home
               </Button>
-              <Button variant="link">Contact</Button>
+              <Button
+                variant="link"
+                onClick={() => navigate(appRoutes.contact)}
+              >
+                Contact
+              </Button>
               <Button variant="link" onClick={() => navigate(appRoutes.about)}>
                 About
               </Button>
@@ -146,6 +157,7 @@ export function Navbar() {
                   aria-label="favorites"
                   onMouseEnter={() => setHovered(true)}
                   onMouseLeave={() => setHovered(false)}
+                  onClick={() => navigate(appRoutes.wishlist)}
                   sx={(theme) => ({
                     display: "flex",
                     alignItems: "center",
@@ -160,20 +172,46 @@ export function Navbar() {
                       fontSize: 24,
                       transition: "all 0.3s ease",
                     },
-                    "&:hover": {
-                      backgroundColor: "transparent",
-                    },
+
                   })}
                 >
                   {hovered ? (
-                    <FavoriteIcon
+                    <Badge
+                    badgeContent={countWishlist}
+                    color="primary"
+                    sx={(theme) => ({
+                      "& .MuiBadge-badge": {
+                        backgroundColor: theme.palette.custom.btnPrimary.main,
+                        color: theme.palette.custom.btnPrimary.contrastText,
+                        fontWeight: 400,
+                        fontSize: "1.2rem",
+                      },
+                    })}
+                  >
+                     <FavoriteIcon
                       sx={{
                         transition: "transform 0.2s",
                         transform: "scale(1.1)",
                       }}
                     />
+                  </Badge>
+                  
                   ) : (
+                   <Badge
+                    badgeContent={countWishlist}
+                    color="primary"
+                    sx={(theme) => ({
+                      "& .MuiBadge-badge": {
+                        backgroundColor: theme.palette.custom.btnPrimary.main,
+                        color: theme.palette.custom.btnPrimary.contrastText,
+                        fontWeight: 400,
+                        fontSize: "1.2rem",
+                      },
+                    })}
+                  >
                     <FavoriteBorderIcon />
+                  </Badge>
+                    
                   )}
                 </IconButton>
                 <IconButton
@@ -189,9 +227,6 @@ export function Navbar() {
                     "& .MuiSvgIcon-root": {
                       fontSize: 24,
                       transition: "color 0.3s ease",
-                    },
-                    "&:hover": {
-                      backgroundColor: "transparent",
                     },
                   })}
                   onClick={() => navigate(appRoutes.cart)}

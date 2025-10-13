@@ -1,28 +1,17 @@
 import { useNavigate } from "react-router";
 import { ProductList } from "../components/product-list";
 import { appRoutes } from '../../../routes'
-import { AuthComponentGuard } from "../../auth/guards/auth-guard";
-
-const containerStyle = { display: 'flex', justifyContent: 'flex-end' }
-const buttonStyle = { outline: 'none', border: 'none', padding: '10px', borderRadius: '8px' }
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 function ProductsPage() {
     const navigate = useNavigate();
 
     return (
-        <>
-            <div style={containerStyle}>
-                <AuthComponentGuard>
-                    <button 
-                        style={buttonStyle} 
-                        onClick={() => navigate(appRoutes.products.form)}
-                    >
-                        Create +
-                    </button>
-                </AuthComponentGuard>
-            </div>
-            <ProductList />
-        </>
+        <Box sx={{py:10 }}>
+            <Typography sx={{fontSize: "2.4rem", fontWeight: "600", mb:3}}>All Products</Typography>
+            <ProductList useGetAll={true} swiper={false} allListed={true} />
+        </Box>
     )
 }
 

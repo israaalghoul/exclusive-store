@@ -6,6 +6,8 @@ export function useGetMeQuery() {
     const token = userStorage.get();
     return useQuery({
         queryKey: ['users', token],
-        queryFn: async () => await AuthServices.getMe()
+        queryFn: async () => await AuthServices.getMe(),
+        // only run the query when token exists
+        enabled: !!token,
     })
 }

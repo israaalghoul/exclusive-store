@@ -1,13 +1,14 @@
 import { appRoutes } from "../../routes";
 import { Box, Button, Typography, Container } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Breadcrumbs, Link } from "@mui/material";
+import {Btn} from "../../shared/components/btn"
 export default function NotFoundPage() {
   const navigate = useNavigate();
   return (
-    <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, py: { xs: 2, md: 10 } }}>
+    <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, pt: { xs: 2, md: 10 } }}>
       {/* ===== Breadcrumb ===== */}
-      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
+      <Breadcrumbs aria-label="breadcrumb" >
         <Link
           underline="hover"
           color="inherit"
@@ -20,8 +21,8 @@ export default function NotFoundPage() {
           CheckOut
         </Typography>
       </Breadcrumbs>
-      <Container
-        maxWidth="md"
+      <Box
+        maxWidth="100%"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -29,6 +30,8 @@ export default function NotFoundPage() {
           justifyContent: "center",
           minHeight: "100vh",
           textAlign: "center",
+          padding:0,
+          margin:0
         }}
       >
         <Typography
@@ -36,7 +39,7 @@ export default function NotFoundPage() {
           sx={{
             fontSize: "110px",
             fontWeight: 500,
-            mb: 2,
+            mb: 5,
           }}
         >
           404 Not Found
@@ -48,32 +51,21 @@ export default function NotFoundPage() {
             fontSize: "16px",
             fontWeight: 400,
             color: "#666666",
-            mb: 4,
+            mb: 10,
           }}
         >
           Your visited page not found. You may go home page.
         </Typography>
-
-        <Button
-          variant="contained"
-          onClick={() => navigate("/")}
-          sx={{
-            width: "254px",
-            height: "56px",
-            backgroundColor: "#DB4444",
-            color: "#FAFAFA",
-            fontSize: "16px",
-            fontWeight: 500,
-            textTransform: "none",
-            borderRadius: "4px",
-            "&:hover": {
-              backgroundColor: "#b73737",
-            },
-          }}
-        >
-          Back to home page
-        </Button>
-      </Container>
+        <Btn
+          btnName="Back to home page"
+          variantColor="btnPrimary"
+          px="0rem"
+          py="0rem"
+          width="25.4rem"
+          height="5.6rem"
+       onClick={() => navigate(appRoutes.home)}
+        />
+      </Box>
     </Box>
   );
 }

@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Container, Skeleton } from "@mui/material";
+import { Box, Container, Skeleton, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination as SwiperPagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import ProductsService from "../../services/api";
 import { ProductItem } from "../product-item";
 import { useSearchParams } from "react-router";
+import { useLocation } from "react-router-dom";
 
 export function ProductList({
   limit = 10,
@@ -21,14 +22,18 @@ export function ProductList({
   allListed = false,
   selectedIndex = 0,
   onSelectIndex = () => {},
+  // when true, use the fetched getAll data instead of the limited products list
+  useGetAll = false,
 }) {
   const theme = useTheme();
   const swiperRef = useRef(null);
+  const rootRef = useRef(null);
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
   // Search query
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") ?? "";
+  const location = useLocation();
   const {
     isLoading,
     isError,
@@ -38,10 +43,35 @@ export function ProductList({
     queryKey: ["products", searchQuery],
     queryFn: async () => await ProductsService.getAll(searchQuery),
   });
+  // infinite query when using getAll pages
+  const pageSize = 20;
+  const infiniteQuery = useInfiniteQuery({
+    queryKey: ["products-infinite", searchQuery],
+    queryFn: async ({ pageParam = 0 }) => {
+      const all = await ProductsService.getAll(searchQuery);
+      const start = pageParam * pageSize;
+      const items = all.slice(start, start + pageSize);
+      return { items, total: all.length };
+    },
+    enabled: useGetAll,
+    getNextPageParam: (lastPage, pages) => {
+      const loaded = pages.length * pageSize;
+      return loaded < lastPage.total ? pages.length : undefined;
+    },
+  });
   // Limit product
   const [productsLimit, setProductsLimit] = useState([]);
+  const [pendingHighlightId, setPendingHighlightId] = useState(null);
   // All product
-  const list = allListed || swiper || !useSelected ? productsLimit : fetchedData;
+  // If useGetAll is true, display the accumulated pages from infiniteQuery
+  const infiniteItems = infiniteQuery.data
+    ? infiniteQuery.data.pages.flatMap((p) => p.items)
+    : [];
+  const list = useGetAll
+    ? infiniteItems
+    : allListed || swiper || !useSelected
+    ? productsLimit
+    : fetchedData;
   // Online & Offline
   const [isOnline, setIsOnline] = useState(
     typeof navigator !== "undefined" ? navigator.onLine : true
@@ -73,6 +103,90 @@ export function ProductList({
     itemRefs.current = new Array(list.length);
   }, [list.length]);
 
+  // handle highlight from query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+  const highlightId = params.get("highlight");
+  if (!highlightId) return;
+    const idx = list.findIndex((p) => String(p.id) === String(highlightId));
+    if (idx === -1) {
+      // if not present in the current list, try fetching it by id and prepend so it becomes visible
+      (async () => {
+        try {
+          const res = await ProductsService.getById(highlightId);
+          if (res && res.length > 0) {
+            const product = res[0];
+            // prepend if not exists
+            setProductsLimit((prev) => {
+              if (prev.find((p) => String(p.id) === String(product.id))) return prev;
+              const next = [product, ...prev];
+              // keep length similar to previous limit
+              return next.slice(0, Math.max(prev.length, 1));
+            });
+            // mark pending so we can flash after list updates and refs attach
+            setPendingHighlightId(String(highlightId));
+          }
+        } catch (e) {
+          // ignore fetch error
+        }
+      })();
+      return;
+    }
+    // ensure the whole section is visible on the page first
+    if (rootRef.current && typeof rootRef.current.scrollIntoView === "function") {
+      try {
+        rootRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (e) {
+        /* ignore */
+      }
+    }
+
+    onSelectIndex(idx);
+    // flash
+    const el = itemRefs.current[idx];
+    if (el) {
+      const original = el.style.transition;
+      el.style.transition = "background-color 0.2s";
+      const prevBg = el.style.backgroundColor;
+      el.style.backgroundColor = "rgba(255,255,0,0.6)";
+      setTimeout(() => {
+        el.style.backgroundColor = prevBg || "";
+        el.style.transition = original || "";
+      }, 600);
+    }
+  }, [location.search, list]);
+
+  // when we have a pending highlight (we fetched and prepended a product), wait for list to update then flash
+  useEffect(() => {
+    if (!pendingHighlightId) return;
+    const idx = list.findIndex((p) => String(p.id) === String(pendingHighlightId));
+    if (idx === -1) return; // still not present
+
+    // ensure section visible
+    if (rootRef.current && typeof rootRef.current.scrollIntoView === "function") {
+      try {
+        rootRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (e) {
+        /* ignore */
+      }
+    }
+
+    onSelectIndex(idx);
+    const el = itemRefs.current[idx];
+    if (el) {
+      const original = el.style.transition;
+      el.style.transition = "background-color 0.2s";
+      const prevBg = el.style.backgroundColor;
+      el.style.backgroundColor = "rgba(255,255,0,0.6)";
+      setTimeout(() => {
+        el.style.backgroundColor = prevBg || "";
+        el.style.transition = original || "";
+      }, 600);
+    }
+
+    setPendingHighlightId(null);
+  }, [pendingHighlightId, list]);
+
 
   useEffect(() => {
     if (!useSelected || list.length === 0) return;
@@ -101,7 +215,7 @@ export function ProductList({
     return (
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <p style={{ color: "red", fontSize: "1.25rem" }}>
-          {error?.message ?? "حدث خطأ"}
+          {error?.message ?? "Error"}
         </p>
       </Box>
     );
@@ -140,6 +254,7 @@ export function ProductList({
 
   return (
     <Container
+      ref={rootRef}
       maxWidth={false}
       disableGutters
       sx={{ position: "relative", overflow: "visible", p: 0 }}
@@ -154,7 +269,7 @@ export function ProductList({
             onSwiper={(s) => (swiperRef.current = s)}
             style={{ overflow: "visible", paddingBottom: 40 }}
           >
-            {productsLimit.map((item, index) => (
+            {list.map((item, index) => (
               <SwiperSlide
                 key={item.id ?? index}
                 style={{
@@ -209,7 +324,7 @@ export function ProductList({
               "&::-webkit-scrollbar": { height: 8 },
             }}
           >
-            {productsLimit.map((item, index) => (
+            {list.map((item, index) => (
               <Box
                 key={item.id ?? index}
                 ref={(el) => (itemRefs.current[index] = el)}
@@ -256,7 +371,7 @@ export function ProductList({
               flexWrap: "wrap",
             }}
           >
-            {productsLimit.map((item, index) => (
+            {list.map((item, index) => (
               <ProductItem
                 key={item.id}
                 {...item}
@@ -265,6 +380,22 @@ export function ProductList({
                 offerColor={offerColor}
               />
             ))}
+          </Box>
+        )}
+
+        {useGetAll && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <Button
+              onClick={() => infiniteQuery.fetchNextPage()}
+              disabled={!infiniteQuery.hasNextPage || infiniteQuery.isFetchingNextPage}
+              variant="contained"
+            >
+              {infiniteQuery.isFetchingNextPage
+                ? "Loading..."
+                : infiniteQuery.hasNextPage
+                ? "Load more"
+                : "No more products"}
+            </Button>
           </Box>
         )}
 

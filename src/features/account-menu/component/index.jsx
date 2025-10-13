@@ -11,6 +11,7 @@ import {
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { logoutHelper } from "../../auth/utilities/auth";
+import { useQueryClient } from "@tanstack/react-query";
 import ReviewsIcon from "@mui/icons-material/Reviews";
 import CancelIcon from "@mui/icons-material/Cancel";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -23,6 +24,7 @@ export function AccountMenu() {
 
   const { isMenuOpen, anchorEl, closeMenu } = useMenuStore();
   const menuRef = useRef(null);
+  const queryClient = useQueryClient();
 
   //close menu when mouse move out of menu
   useEffect(() => {
@@ -59,6 +61,10 @@ export function AccountMenu() {
         closeMenu;
         break;
       case "logout":
+        // clear cached user data so UI updates immediately
+        try {
+          queryClient.removeQueries({ queryKey: ['users'] });
+        } catch (e) {}
         logoutHelper();
         break;
       default:

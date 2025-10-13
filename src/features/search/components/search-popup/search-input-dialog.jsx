@@ -18,7 +18,7 @@ const SearchIcon = styled(Box)({
   height: "auto",
 });
 
-export function SearchInputDialog({onSearchChange}) {
+export function SearchInputDialog({ onSearchChange, resetKey = 0, externalValue = '' }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("q") ?? "";
   const [inputValue, setInputValue] = useState(() => searchQuery);
@@ -30,6 +30,25 @@ export function SearchInputDialog({onSearchChange}) {
       inputRef.current.focus();
     }
   }, [open]);
+
+  // when parent requests a reset (resetKey changes), clear the input value
+  useEffect(() => {
+    if (resetKey) {
+      setInputValue("");
+    }
+  }, [resetKey]);
+
+  // when parent provides an external value (popular suggestion), update input and trigger search
+  useEffect(() => {
+    if (externalValue && externalValue !== inputValue) {
+      setInputValue(externalValue);
+      onSearchChange?.(externalValue);
+      // focus the input so user can continue typing or see the result
+      if (inputRef.current) inputRef.current.focus();
+      // update querystring after debounce
+      debounce(() => updateQueryStringHandler(externalValue), 2000)();
+    }
+  }, [externalValue]);
 
   const updateQueryStringHandler = (query) => {
     const params = {

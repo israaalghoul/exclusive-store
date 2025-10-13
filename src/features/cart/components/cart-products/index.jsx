@@ -26,6 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { appRoutes } from "../../../../routes/index";
 import { useCart } from "../../../products/store/cart";
+
 // Local Icons
 import dropUpIcon from "../../../../assets/images/arrow/drop-up-icon.svg";
 import dropDownIcon from "../../../../assets/images/arrow/drop-down-icon.svg";
@@ -257,7 +258,9 @@ export function CartProducts() {
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
         <Button
           variant="outlined"
-          onClick={clearCart}
+           onClick={() =>
+                    navigate(appRoutes.home)
+                  }
           sx={{
             textTransform: "none",
             border: "1px solid #000",
@@ -268,7 +271,7 @@ export function CartProducts() {
         </Button>
         <Button
           variant="outlined"
-          onClick={clearCart}
+ 
           sx={{
             textTransform: "none",
             border: "1px solid #000",

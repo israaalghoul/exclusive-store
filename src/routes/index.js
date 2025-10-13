@@ -2,6 +2,7 @@ export const appRoutes = {
     home: '/',
     products: {
         list: '/products',
+        all:'/products/all',
 
     },
     auth: {
@@ -14,6 +15,8 @@ export const appRoutes = {
     cart: '/cart-products',
     checkOut : '/check-out',
     detailsProduct :'/details-product',
-    about:'/about'
+    about:'/about',
+    contact:'/contact',
+    wishlist:'/wishlist',
 
 }

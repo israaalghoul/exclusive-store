@@ -4,6 +4,8 @@ import { ProductList } from "../../products/components/product-list";
 import { HeaderSection } from "../../../shared/components/header-section";
 import { useState } from "react";
 import {Btn} from "../../../shared/components/btn"
+import { useNavigate } from "react-router";
+import { appRoutes } from "../../../routes";
 
 export default function ExploreProductsPage() {
   const theme = useTheme();
@@ -13,6 +15,8 @@ export default function ExploreProductsPage() {
   const handleNext = () =>
     setSelectedIndex((i) => Math.min(i + 1, totalItems - 1));
   const handlePrev = () => setSelectedIndex((i) => Math.max(i - 1, 0));
+    const navigate = useNavigate();
+
   return (
     <Box
       sx={(theme) => ({
@@ -40,6 +44,8 @@ export default function ExploreProductsPage() {
         discount="New"
         swiper={false}
         allListed={true}
+        selectedIndex={selectedIndex}
+        onSelectIndex={setSelectedIndex}
       />
       <Box sx={{display:"flex",justifyContent:"center", marginTop:"2.0rem",marginBottom:"7.0rem"}}>
               <Btn
@@ -49,6 +55,9 @@ export default function ExploreProductsPage() {
                 py="0rem"
                 width="23.4rem"
                 height="5.6rem"
+                onClick={() => navigate(appRoutes.products.all)}
+
+            
               />
             </Box>
     </Box>

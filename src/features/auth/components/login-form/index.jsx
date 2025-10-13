@@ -38,13 +38,15 @@ export function LoginForm() {
   });
   const { mutateAsync: login, isPending } = useLoginMutation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(window.location.search);
+  const redirectTo = params.get("redirect") || appRoutes.home;
 
   const onSubmitHandler = handleSubmit(async (values) => {
     try {
       const response = await login(omit(values, ["confirmPassword"]));
-      userStorage.set(response.token);
-      toast.success("Login successfully");
-      navigate(appRoutes.home);
+  userStorage.set(response.token);
+  toast.success("Login successfully");
+  navigate(redirectTo);
     } catch (e) {
       console.log(e);
       toast.error("Failed to login");

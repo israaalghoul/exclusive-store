@@ -39,13 +39,15 @@ export function SignUpForm() {
   });
   const { mutateAsync: signUp, isPending } = useSignUpMutation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(window.location.search);
+  const redirectTo = params.get("redirect") || appRoutes.home;
 
   const onSubmitHandler = handleSubmit(async (values) => {
     try {
       const response = await signUp(omit(values, ["confirmPassword"]));
-      userStorage.set(response.token);
-      toast.success("Sign up successfully");
-      navigate(appRoutes.home);
+  userStorage.set(response.token);
+  toast.success("Sign up successfully");
+  navigate(redirectTo);
     } catch (e) {
       console.log(e);
       toast.error("Failed to sign up");

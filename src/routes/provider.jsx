@@ -1,17 +1,18 @@
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router";
-import { homeRoutes } from "../features/home/routes";
-import { productsRoutes } from "../features/products/routes";
-import { authRoutes } from "../features/auth/routes";
-import { AppContainer } from "../shared/layout/app-container";
 import { lazy } from "react";
-import { DefaultLayout } from "../shared/layout/default-layout";
 import { cartRoutes } from "../features/cart/routes";
+import { homeRoutes } from "../features/home/routes";
+import { authRoutes } from "../features/auth/routes";
+import { aboutRoutes } from "../features/about/routes";
+import { contactRoutes } from "../features/contact/routes";
+import { wishListRoutes } from "../features/wishlist/routes";
+import { productsRoutes } from "../features/products/routes";
+import { checkOutRoutes } from "../features/check-out/routes";
+import { DefaultLayout } from "../shared/layout/default-layout";
 import { saleTodayRoutes } from "../features/sale-today's/routes";
-import {checkOutRoutes} from "../features/check-out/routes";
-import {detailsProductRoutes} from "../features/details-product/routes"
-import {saleCategoryRoutes} from "../features/sale-category/routes"
-import {newArrivalRoutes} from "../features/new-arrival/routes"
-import {aboutRoutes} from "../features/about/routes"
+import { newArrivalRoutes } from "../features/new-arrival/routes";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { saleCategoryRoutes } from "../features/sale-category/routes";
+import { detailsProductRoutes } from "../features/details-product/routes";
 
 const NotFoundPage = lazy(() => import("../shared/pages/not-found-page"));
 
@@ -30,6 +31,8 @@ const routes = [
       ...saleCategoryRoutes,
       ...newArrivalRoutes,
       ...aboutRoutes,
+      ...contactRoutes,
+      ...wishListRoutes,
 
       {
         path: "*",

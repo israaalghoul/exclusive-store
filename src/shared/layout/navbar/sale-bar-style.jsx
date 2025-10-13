@@ -40,7 +40,6 @@ export const styleNavSale = {
   }),
   ///////////////////////////////////SHOP BTN STYLE
   shopBtnStyle: {
-    position: "fixed",
     alignItems: "center",
     textDecoration: "underline",
     fontSize: 14,

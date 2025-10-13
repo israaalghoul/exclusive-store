@@ -4,7 +4,8 @@ import { Box } from "@mui/material";
 import { ProductList } from "../../products/components/product-list";
 import { HeaderSection } from "../../../shared/components/header-section";
 import {Btn} from "../../../shared/components/btn"
-
+import { useNavigate } from "react-router";
+import { appRoutes } from "../../../routes";
 export default function SaleTodayPage() {
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -13,6 +14,7 @@ export default function SaleTodayPage() {
   const handleNext = () =>
     setSelectedIndex((i) => Math.min(i + 1, totalItems - 1));
   const handlePrev = () => setSelectedIndex((i) => Math.max(i - 1, 0));
+      const navigate = useNavigate();
   return (
     <Box
       sx={(theme) => ({
@@ -49,6 +51,7 @@ export default function SaleTodayPage() {
           py="0rem"
           width="23.4rem"
           height="5.6rem"
+          onClick={() => navigate(appRoutes.products.all)}
         />
       </Box>
 

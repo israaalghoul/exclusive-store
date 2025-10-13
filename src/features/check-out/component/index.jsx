@@ -18,9 +18,15 @@ import styled from "@emotion/styled";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { userStorage } from "../../auth/storage";
+import React, { useState, useEffect } from "react";
 import { appRoutes } from "../../../routes/index";
 import { useCart } from "../../products/store/cart";
+import { useGetMeQuery } from "../../auth/services/queries";
 
 const TextFieldCustom = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -48,11 +54,15 @@ const ButtonNav = styled(Button)(({ theme }) => ({
 }));
 export function CheckOut() {
   const navigate = useNavigate();
-  const { cart, totalPrice } = useCart();
+  const { cart, totalPrice, clearCart } = useCart();
+  const [openAuthModal, setOpenAuthModal] = useState(false);
+  const { data: me } = useGetMeQuery();
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -61,9 +71,30 @@ export function CheckOut() {
     },
   });
 
+  useEffect(() => {
+    if (!me) return;
+    // prefill a few fields from the user profile if available
+    reset({
+      ...{
+        saveInfo: true,
+        paymentMethod: "cash",
+      },
+      firstName: me.name || "",
+      email: me.email || "",
+    });
+  }, [me, reset]);
+
   const onSubmit = (data) => {
-    // console.log("Billing info:", data);
-    toast.success("Order placed successfully!");
+    // console.log(data);
+    // clear cart and show order confirmation dialog
+    try {
+      clearCart();
+    } catch (err) {
+      // ignore clearing errors
+      // eslint-disable-next-line no-console
+      console.error("clearCart error", err);
+    }
+    setOrderPlaced(true);
   };
   const subtotal = cart.reduce((acc, item) => acc + item.price, 0);
   const total = subtotal;
@@ -308,7 +339,6 @@ export function CheckOut() {
                   label="Coupon Code"
                   fullWidth
                   size="small"
-                  alignItems="center"
                   sx={{
                     "& .MuiInputBase-input": {
                       fontSize: "1.4rem",
@@ -317,10 +347,11 @@ export function CheckOut() {
                     },
                     "& .MuiInputLabel-root": {
                       fontSize: "1.6rem",
-                      padding:"1.0rem"
+                      padding: "1.0rem",
                     },
                   }}
                 />
+
                 <Button
                   variant="contained"
                   color="error"
@@ -335,10 +366,86 @@ export function CheckOut() {
                 color="error"
                 fullWidth
                 sx={{ mt: 3, width: "21.1rem", height: "5.6rem" }}
-                onClick={handleSubmit(onSubmit)}
+                onClick={(e) => {
+                  const token = userStorage.get();
+                  if (!token) {
+                    // open modal (we'll control via state)
+                    setOpenAuthModal(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)(e);
+                }}
               >
                 Place Order
               </Button>
+              <Dialog           
+                open={openAuthModal}
+                onClose={() => setOpenAuthModal(false)}
+                aria-labelledby="auth-required-dialog"
+              >
+                <DialogTitle id="auth-required-dialog">
+                  You need to signup to proceed to checkout
+                </DialogTitle>
+                <DialogContent>
+                  <Typography>
+                    Please sign up or login to complete your purchase.
+                  </Typography>
+                </DialogContent>
+                <DialogActions sx={{display:"flex", justifyContent:"center" ,gap:"1.2rem", mb:1}}>
+                  <Button
+                    onClick={() => {
+                      setOpenAuthModal(false);
+                      // include redirect back to checkout after signup
+                      navigate(`${appRoutes.auth.signUp}?redirect=${encodeURIComponent(appRoutes.checkOut)}`);
+                    }}
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.custom.btnPrimary.main,
+                      color: "#fff",
+                    })}
+                    variant="contained"
+                  >
+                    Sign Up
+                  </Button>
+                  <Button onClick={() => setOpenAuthModal(false)}
+                    sx={(theme) => ({
+                      backgroundColor: "#5a5a5aff",
+                      color: "#fff",
+                    })}
+                    variant="contained"
+                    >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Dialog
+                open={orderPlaced}
+                onClose={() => setOrderPlaced(false)}
+                aria-labelledby="order-placed-dialog"
+              >
+                <DialogTitle id="order-placed-dialog">Order Placed Successfully!</DialogTitle>
+                <DialogContent>
+                  <Typography>Your order has been placed.</Typography>
+                </DialogContent>
+                <DialogActions sx={{ display: "flex", justifyContent: "center", gap: "1.2rem", mb: 1 }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setOrderPlaced(false);
+                      navigate(appRoutes.home);
+                    }}
+                    sx={(theme) => ({ backgroundColor: theme.palette.custom.btnPrimary.main, color: "#fff" })}
+                  >
+                    Continue shopping
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => setOrderPlaced(false)}
+                    sx={(theme) => ({ backgroundColor: "#5a5a5aff", color: "#fff" })}
+                  >
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </CardContent>
           </Card>
         </Grid>
