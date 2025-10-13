@@ -15,7 +15,7 @@ export default function SaleTodayPage() {
     setSelectedIndex((i) => Math.min(i + 1, totalItems - 1));
   const handlePrev = () => setSelectedIndex((i) => Math.max(i - 1, 0));
       const navigate = useNavigate();
-      // console.log("111");
+      console.log("111");
   return (
     <Box
       sx={(theme) => ({
