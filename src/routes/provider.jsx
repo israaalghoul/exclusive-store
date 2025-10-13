@@ -10,7 +10,7 @@ import { checkOutRoutes } from "../features/check-out/routes";
 import { DefaultLayout } from "../shared/layout/default-layout";
 import { saleTodayRoutes } from "../features/sale-today's/routes";
 import { newArrivalRoutes } from "../features/new-arrival/routes";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, createHashRouter, RouterProvider } from "react-router";
 import { saleCategoryRoutes } from "../features/sale-category/routes";
 import { detailsProductRoutes } from "../features/details-product/routes";
 
@@ -42,7 +42,7 @@ const routes = [
   },
 ];
 
-const router = createBrowserRouter(routes);
+const router = createHashRouter(routes);
 
 export function AppRouterProvider() {
   return <RouterProvider router={router} />;

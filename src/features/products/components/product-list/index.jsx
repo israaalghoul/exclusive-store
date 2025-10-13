@@ -24,6 +24,8 @@ export function ProductList({
   onSelectIndex = () => {},
   // when true, use the fetched getAll data instead of the limited products list
   useGetAll = false,
+  // optional category id to filter products
+  categoryId,
 }) {
   const theme = useTheme();
   const swiperRef = useRef(null);
@@ -40,15 +42,20 @@ export function ProductList({
     error,
     data: fetchedData = [],
   } = useQuery({
-    queryKey: ["products", searchQuery],
-    queryFn: async () => await ProductsService.getAll(searchQuery),
+    queryKey: ["products", searchQuery, categoryId],
+    queryFn: async () =>
+      categoryId
+        ? await ProductsService.getByCategory(categoryId)
+        : await ProductsService.getAll(searchQuery),
   });
   // infinite query when using getAll pages
   const pageSize = 20;
   const infiniteQuery = useInfiniteQuery({
-    queryKey: ["products-infinite", searchQuery],
+    queryKey: ["products-infinite", searchQuery, categoryId],
     queryFn: async ({ pageParam = 0 }) => {
-      const all = await ProductsService.getAll(searchQuery);
+      const all = categoryId
+        ? await ProductsService.getByCategory(categoryId)
+        : await ProductsService.getAll(searchQuery);
       const start = pageParam * pageSize;
       const items = all.slice(start, start + pageSize);
       return { items, total: all.length };
@@ -92,11 +99,13 @@ export function ProductList({
   // Limit product state
   useEffect(() => {
     const loadProducts = async () => {
-      const data = await ProductsService.getProducts(limit, offset);
+      const data = categoryId
+        ? await ProductsService.getByCategory(categoryId, limit, offset)
+        : await ProductsService.getProducts(limit, offset);
       setProductsLimit(data);
     };
     loadProducts();
-  }, [limit, offset]);
+  }, [limit, offset, categoryId]);
 
   // Reset list
   useEffect(() => {

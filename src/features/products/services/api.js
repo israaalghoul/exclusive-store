@@ -18,6 +18,15 @@ class ProductsService {
     return response.data;
   }
 
+  async getByCategory(categoryId, limit = 50, offset = 0) {
+    // some API expose products by category with query param categoryId
+    const response = await httpClient.get(
+      `${this.#endPoint}?categoryId=${categoryId}`
+    );
+    const all = response.data;
+    return all.slice(offset, offset + limit);
+  }
+
   async getProducts(limit = 50, offset = 0) {
    const response = await httpClient.get(this.#endPoint);
     const all = response.data;

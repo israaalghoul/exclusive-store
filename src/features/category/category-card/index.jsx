@@ -1,11 +1,12 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 
-export function CategoryCard({ icon: Icon, label, active }) {
+export function CategoryCard({ icon: Icon, label, active, img, onClick }) {
   const theme = useTheme();
   const [isHover, setIsHover] = React.useState(false);
   return (
     <Box
+      onClick={onClick}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       sx={{
@@ -28,12 +29,16 @@ export function CategoryCard({ icon: Icon, label, active }) {
         },
       }}
     >
-      <Icon
-        sx={{
-          fontSize: 40,
-          transition: "color 0.3s ease",
-        }}
-      />
+      {img ? (
+        <Box component="img" src={img} alt={label} sx={{ width: 48, height: 48 }} />
+      ) : (
+        <Icon
+          sx={{
+            fontSize: 40,
+            transition: "color 0.3s ease",
+          }}
+        />
+      )}
 
       <Typography
         sx={{
