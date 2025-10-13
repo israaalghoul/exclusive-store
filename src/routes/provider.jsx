@@ -42,7 +42,7 @@ const routes = [
   },
 ];
 
-const router = createHashRouter(routes);
+const router = createBrowserRouter(routes);
 
 export function AppRouterProvider() {
   return <RouterProvider router={router} />;

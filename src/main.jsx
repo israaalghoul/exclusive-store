@@ -5,20 +5,19 @@ import { StrictMode } from 'react'
 import theme from "./theme";
 import App from './App.jsx'
 import './index.css'
-import { HashRouter } from "react-router-dom";
-// import {BrowserRouter } from "react-router-dom";
+import {BrowserRouter } from "react-router-dom";
 
-
+// import { HashRouter } from "react-router-dom";
 
 createRoot(document.getElementById('root')).render(
 
   <StrictMode>
-    <HashRouter>
+    <BrowserRouter>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <App />
     </ThemeProvider>
-    </HashRouter>
+    </BrowserRouter>
   </StrictMode>
 )
 
