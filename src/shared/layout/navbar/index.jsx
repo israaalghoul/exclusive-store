@@ -58,10 +58,23 @@ export function Navbar() {
   };
   const location = useLocation();
   // normalize pathname: remove trailing slash
+  // const normalizedPath = location.pathname.replace(/\/+$/, "");
+  // const hideIcons =
+  //   normalizedPath === appRoutes.auth.signUp ||
+  //   normalizedPath === appRoutes.auth.login;
+useEffect(() => {
   const normalizedPath = location.pathname.replace(/\/+$/, "");
-  const hideIcons =
+
+
+  if (
     normalizedPath === appRoutes.auth.signUp ||
-    normalizedPath === appRoutes.auth.login;
+    normalizedPath === appRoutes.auth.login
+  ) {
+    setHideIcons(true);
+  } else {
+    setHideIcons(false);
+  }
+}, [location]);
 
   return (
     <Box sx={{ flexGrow: 1, pt: open ? "130px" : "85px" }}>
