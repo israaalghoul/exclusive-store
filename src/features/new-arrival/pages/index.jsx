@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { HeaderSection } from "../../../shared/components/header-section";
 import { appRoutes } from "../../../routes";
 import newArrival1 from "../../../assets/images/png/new-arrival1.png";

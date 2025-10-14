@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { appRoutes } from "../../../routes"
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";

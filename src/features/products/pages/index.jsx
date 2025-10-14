@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { ProductList } from "../components/product-list";
 import { appRoutes } from '../../../routes'
 import Box from '@mui/material/Box';

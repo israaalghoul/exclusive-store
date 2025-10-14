@@ -6,7 +6,7 @@ import { signUpFormSchemaValidation } from "./config";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { appRoutes } from "../../../../routes";
 import { userStorage } from "../../storage";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import omit from "lodash/omit";

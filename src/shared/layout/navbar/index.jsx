@@ -17,11 +17,11 @@ import { useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { styleNavApp } from "./app-bar-style";
 import { appRoutes } from "../../../routes";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const SaleBar = styled(Box)(({ theme }) => ({
   ...styleNavSale.saleBarStyle(theme),
@@ -40,13 +40,7 @@ export function Navbar() {
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
   const countWishlist = wishlist.reduce((sum, item) => sum + item.quantity, 0);
   const { openMenu } = useMenuStore();
-
-  //
-  // const { isLoggedIn } = useIsLoggedIn();
   const { data: user } = useGetMeQuery();
-  // console.log (useGetMeQuery());
-  // const { mutateAsync: login} = useLoginMutation();
-  // console.log(login);
   const handleClick = (event) => {
     openMenu(event.currentTarget);
   };
@@ -54,27 +48,21 @@ export function Navbar() {
   const navigate = useNavigate();
   const handleOpenSaleBar = () => {
     setOpen(true);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const [hideIcons, setHideIcons] = useState(false);
   const location = useLocation();
-  // normalize pathname: remove trailing slash
-  // const normalizedPath = location.pathname.replace(/\/+$/, "");
-  // const hideIcons =
-  //   normalizedPath === appRoutes.auth.signUp ||
-  //   normalizedPath === appRoutes.auth.login;
-useEffect(() => {
-  const normalizedPath = location.pathname.replace(/\/+$/, "");
 
-
-  if (
-    normalizedPath === appRoutes.auth.signUp ||
-    normalizedPath === appRoutes.auth.login
-  ) {
-    setHideIcons(true);
-  } else {
-    setHideIcons(false);
-  }
-}, [location]);
+  useEffect(() => {
+    const normalizedPath = location.pathname.replace(/\/+$/, "");
+    if (
+      normalizedPath === appRoutes.auth.signUp ||
+      normalizedPath === appRoutes.auth.login
+    ) {
+      setHideIcons(true);
+    } else {
+      setHideIcons(false);
+    }
+  }, [location.pathname]);
 
   return (
     <Box sx={{ flexGrow: 1, pt: open ? "130px" : "85px" }}>
@@ -185,46 +173,43 @@ useEffect(() => {
                       fontSize: 24,
                       transition: "all 0.3s ease",
                     },
-
                   })}
                 >
                   {hovered ? (
                     <Badge
-                    badgeContent={countWishlist}
-                    color="primary"
-                    sx={(theme) => ({
-                      "& .MuiBadge-badge": {
-                        backgroundColor: theme.palette.custom.btnPrimary.main,
-                        color: theme.palette.custom.btnPrimary.contrastText,
-                        fontWeight: 400,
-                        fontSize: "1.2rem",
-                      },
-                    })}
-                  >
-                     <FavoriteIcon
-                      sx={{
-                        transition: "transform 0.2s",
-                        transform: "scale(1.1)",
-                      }}
-                    />
-                  </Badge>
-                  
+                      badgeContent={countWishlist}
+                      color="primary"
+                      sx={(theme) => ({
+                        "& .MuiBadge-badge": {
+                          backgroundColor: theme.palette.custom.btnPrimary.main,
+                          color: theme.palette.custom.btnPrimary.contrastText,
+                          fontWeight: 400,
+                          fontSize: "1.2rem",
+                        },
+                      })}
+                    >
+                      <FavoriteIcon
+                        sx={{
+                          transition: "transform 0.2s",
+                          transform: "scale(1.1)",
+                        }}
+                      />
+                    </Badge>
                   ) : (
-                   <Badge
-                    badgeContent={countWishlist}
-                    color="primary"
-                    sx={(theme) => ({
-                      "& .MuiBadge-badge": {
-                        backgroundColor: theme.palette.custom.btnPrimary.main,
-                        color: theme.palette.custom.btnPrimary.contrastText,
-                        fontWeight: 400,
-                        fontSize: "1.2rem",
-                      },
-                    })}
-                  >
-                    <FavoriteBorderIcon />
-                  </Badge>
-                    
+                    <Badge
+                      badgeContent={countWishlist}
+                      color="primary"
+                      sx={(theme) => ({
+                        "& .MuiBadge-badge": {
+                          backgroundColor: theme.palette.custom.btnPrimary.main,
+                          color: theme.palette.custom.btnPrimary.contrastText,
+                          fontWeight: 400,
+                          fontSize: "1.2rem",
+                        },
+                      })}
+                    >
+                      <FavoriteBorderIcon />
+                    </Badge>
                   )}
                 </IconButton>
                 <IconButton

@@ -3,7 +3,7 @@ import { debounce } from "../../../../shared/utilities/debounce";
 import { styled, alpha } from "@mui/material/styles";
 import { styleSearch } from "./search-input-style";
 import InputBase from "@mui/material/InputBase";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import { Box, Tooltip } from "@mui/material";
 import { useModalStore } from "../../store";
 import React, { useEffect } from "react";

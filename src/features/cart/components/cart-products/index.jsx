@@ -20,7 +20,7 @@ import {
   Link,
   Divider,
 } from "@mui/material";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 // MUI Icons
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -100,9 +100,10 @@ export function CartProducts() {
                         position: "relative",
                       }}
                     >
+                      {/* support images as array or single string */}
                       <img
-                        src={item.images}
-                        alt={item.name}
+                        src={Array.isArray(item.images) ? item.images[0] : item.images}
+                        alt={item.title || item.name || 'product'}
                         width={60}
                         height={60}
                         style={{ borderRadius: 8 }}
@@ -141,7 +142,7 @@ export function CartProducts() {
                           fontWeight: 400,
                         }}
                       >
-                        {item.name.split(" ").slice(0, 3).join(" ")}
+                        {(item.title || item.name || "").toString().split(" ").slice(0, 3).join(" ")}
                       </Typography>
                     </Box>
                   </TableCell>

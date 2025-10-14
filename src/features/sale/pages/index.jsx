@@ -10,7 +10,7 @@ import heroImg2 from "../../../assets/images/png/hero2.png";
 import heroImg3 from "../../../assets/images/png/hero3.png";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {appRoutes} from "../../../routes/index";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import "swiper/css";
 import "swiper/css/navigation";

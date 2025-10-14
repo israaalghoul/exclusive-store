@@ -4,6 +4,13 @@ import { Box, Typography, useTheme } from "@mui/material";
 export function CategoryCard({ icon: Icon, label, active, img, onClick }) {
   const theme = useTheme();
   const [isHover, setIsHover] = React.useState(false);
+
+  const isActiveOrHover = active || isHover;
+  const bgColor = isActiveOrHover
+    ? theme.palette.custom.btnPrimary.main
+    : "transparent";
+  const textColor = isActiveOrHover ? "#fff" : theme.palette.text.primary;
+
   return (
     <Box
       onClick={onClick}
@@ -21,8 +28,8 @@ export function CategoryCard({ icon: Icon, label, active, img, onClick }) {
         gap: 1,
         cursor: "pointer",
         transition: "all 0.3s ease",
-        bgcolor: active ? theme.palette.primary.main : "transparent",
-        color: active ? "#fff" : theme.palette.text.primary,
+        bgcolor: bgColor,
+        color: textColor,
         "&:hover": {
           bgcolor: theme.palette.custom.btnPrimary.main,
           color: "#fff",
@@ -31,14 +38,9 @@ export function CategoryCard({ icon: Icon, label, active, img, onClick }) {
     >
       {img ? (
         <Box component="img" src={img} alt={label} sx={{ width: 48, height: 48 }} />
-      ) : (
-        <Icon
-          sx={{
-            fontSize: 40,
-            transition: "color 0.3s ease",
-          }}
-        />
-      )}
+      ) : Icon ? (
+        <Icon sx={{ fontSize: 40, transition: "color 0.3s ease", color: textColor }} />
+      ) : null}
 
       <Typography
         sx={{

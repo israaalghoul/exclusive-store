@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import { Tooltip } from "@mui/material";
 import { useState, useEffect } from "react";
 import ProductsService from "../../../products/services/api";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../../routes/index";
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {

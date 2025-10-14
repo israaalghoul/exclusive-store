@@ -4,7 +4,7 @@ import { ProductList } from "../../products/components/product-list";
 import { HeaderSection } from "../../../shared/components/header-section";
 import { useState } from "react";
 import {Btn} from "../../../shared/components/btn"
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../routes";
 
 export default function ExploreProductsPage() {

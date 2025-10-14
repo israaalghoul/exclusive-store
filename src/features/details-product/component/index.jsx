@@ -10,8 +10,10 @@ import {
   TextField,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import ProductsService from "../../products/services/api";
 import AddIcon from "@mui/icons-material/Add";
 import { appRoutes } from "../../../routes/index";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -30,7 +32,67 @@ const ButtonNav = styled(Button)(({ theme }) => ({
 export function DetailsProduct() {
   const navigate = useNavigate();
   const { cart, totalPrice } = useCart();
+  const { addToCart, increaseQty, decreaseQty } = useCart();
   const [hovered, setHovered] = useState(false);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  const location = useLocation();
+  const stateProduct = location.state?.product ?? null;
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      if (!id) return null;
+      const res = await ProductsService.getById(id);
+      // API returns an array when querying by id
+      return Array.isArray(res) ? res[0] : res;
+    },
+    enabled: !!id && !stateProduct,
+    initialData: stateProduct || undefined,
+  });
+
+  const product = stateProduct || data;
+  const [mainImage, setMainImage] = useState(product?.images?.[0] || null);
+  const [quantity, setQuantity] = useState(1);
+// console.log(product);
+  useEffect(() => {
+    setMainImage(product?.images?.[0] || null);
+  }, [product]);
+
+  const handleDecrease = () => {
+    // if product already in cart, decrease there, otherwise adjust local quantity
+    if (!product) return;
+    const inCart = cart.find((it) => String(it.id) === String(product.id));
+    if (inCart) {
+      decreaseQty(product.id);
+      // reflect new qty in local state if present in cart
+      const updated = cart.find((it) => String(it.id) === String(product.id));
+      setQuantity(updated ? updated.quantity : Math.max(1, quantity - 1));
+      return;
+    }
+    setQuantity((q) => Math.max(1, q - 1));
+  };
+
+  const handleIncrease = () => {
+    if (!product) return;
+    const inCart = cart.find((it) => String(it.id) === String(product.id));
+    if (inCart) {
+      increaseQty(product.id);
+      const updated = cart.find((it) => String(it.id) === String(product.id));
+      setQuantity(updated ? updated.quantity : quantity + 1);
+      return;
+    }
+    setQuantity((q) => q + 1);
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    // add to cart with selected quantity
+    addToCart({ ...product, quantity });
+    // navigate to cart page
+    navigate(appRoutes.cart);
+  };
   return (
     <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, pb: { xs: 2, md: 6 } }}>
       {/* Links */}
@@ -58,7 +120,7 @@ export function DetailsProduct() {
             fontWeight: 400,
           })}
         >
-          Product Name
+          {product?.title || 'Product Name'}
         </Button>
       </Box>
 
@@ -75,44 +137,36 @@ export function DetailsProduct() {
         <Grid container spacing={7}>
           <Grid item xs={3} alignContent="center">
             <Grid container spacing={3} direction="column">
-              <Box
-                component="img"
-                src={details}
-                alt="main"
-                sx={{
-                  borderRadius: 0.5,
-                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                }}
-              />
-              <Box
-                component="img"
-                src={details}
-                alt="main"
-                sx={{
-                  borderRadius: 0.5,
-                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                }}
-              />
-              <Box
-                component="img"
-                src={details}
-                alt="main"
-                sx={{
-                  borderRadius: 0.5,
-                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                }}
-              />
+              {(product?.images || []).map((img, i) => (
+                <Box
+                  key={i}
+                  component="img"
+                  src={img}
+                  alt={`thumb-${i}`}
+                  onClick={() => setMainImage(img)}
+                  sx={{
+                    borderRadius: 0.5,
+                    boxShadow: mainImage === img ? "0 6px 14px rgba(0,0,0,0.16)" : "0 4px 10px rgba(0,0,0,0.1)",
+                    cursor: 'pointer',
+                    width: '100%',
+                    maxWidth: "17.0rem",
+                    height: "13.8rem",
+                  }}
+                />
+              ))}
             </Grid>
           </Grid>
 
           <Grid item xs={9}>
             <Box
               component="img"
-              src={imageFake}
+              src={mainImage || imageFake}
               alt="main"
               sx={{
                 borderRadius: 0.5,
                 boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                width: '100%',
+                maxWidth: "50.0rem",
               }}
             />
           </Grid>
@@ -121,8 +175,7 @@ export function DetailsProduct() {
         {/* Information */}
         <Box sx={{ flex: 1 }}>
           <Typography variant="h5" sx={{ fontWeight: 600, fontSize: "2.4rem" }}>
-            {/* {cart.name} */}
-            Lorem, ipsum dolor sit amet consectetur
+            {product?.title || 'Product Name'}
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
@@ -153,7 +206,7 @@ export function DetailsProduct() {
 
           {/* Price */}
           <Typography variant="h6" sx={{ mt: 2, fontSize: "2.4rem" }}>
-            ${cart?.price?.toFixed(2) || "N/A"}
+            ${product?.price?.toFixed(2) || cart?.price?.toFixed(2) || "N/A"}
           </Typography>
 
           {/* Description */}
@@ -161,8 +214,7 @@ export function DetailsProduct() {
             variant="body2"
             sx={{ mt: 2, lineHeight: 1.6, fontSize: "1.4rem" }}
           >
-            Lorem, ipsum dolor sit amet consectetur
-            {/* {cart.description} */}
+            {product?.description || 'No description available.'}
           </Typography>
 
           {/* Colors */}
@@ -292,11 +344,12 @@ export function DetailsProduct() {
                     color: "#fff",
                   },
                 }}
+                onClick={handleDecrease}
               >
                 <RemoveIcon sx={{ fontSize: "large" }} />
               </IconButton>
               <Typography variant="body1" sx={{ fontSize: "2.0rem" }}>
-                2
+                {quantity}
               </Typography>
               <IconButton
                 size="small"
@@ -310,6 +363,7 @@ export function DetailsProduct() {
                     color: "#fff",
                   },
                 }}
+                onClick={handleIncrease}
               >
                 <AddIcon sx={{ fontSize: "large" }} />
               </IconButton>
@@ -318,6 +372,7 @@ export function DetailsProduct() {
             <Button
               variant="contained"
               color="error"
+              onClick={handleBuyNow}
               sx={{
                 borderRadius: 0.5,
                 textTransform: "none",

@@ -19,7 +19,7 @@ export function CartProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
 
 
-  const addToCart = ({ ...product }) => {
+  const addToCart = ({ quantity = 1, ...product }) => {
     const normId = normalizeId(product.id) || uuidv4();
     const productWithId = { id: normId, ...product };
     setCart((prev) => {
@@ -27,11 +27,11 @@ export function CartProvider({ children }) {
       if (existing) {
         return prev.map((item) =>
           item.id === productWithId.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + Number(quantity) }
             : item
         );
       }
-      return [...prev, { ...productWithId, quantity: 1 }];
+      return [...prev, { ...productWithId, quantity: Number(quantity) }];
     });
   };
 

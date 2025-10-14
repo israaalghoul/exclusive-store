@@ -1,86 +1,69 @@
-import { Box, IconButton } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import CategoriesService from "../services/api";
+import { useTheme } from "@mui/material/styles";
 import { CategoryCard } from "../category-card";
 import { ProductList } from "../../products/components/product-list";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate } from 'react-router-dom';
 
-export function CategoriesSection() {
-  const { data: categories = [], isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => await CategoriesService.getAll(),
-  });
-
-  const [selected, setSelected] = React.useState(null);
-  const [startIndex, setStartIndex] = React.useState(0);
+export function CategoriesSection({
+  startIndex = 0,
+  visibleCount = 5,
+  setStartIndex = () => {},
+  categories = [],
+  selectedIndex = 0,
+  setSelectedIndex = () => {},
+}) {
+  const theme = useTheme();
   const navigate = useNavigate();
-  const visibleCount = 5; // how many category cards to show in the row
 
-  React.useEffect(() => {
-    if (!isLoading && categories.length > 0 && selected == null) {
-      setSelected(categories[0].id);
-    }
-  }, [isLoading, categories]);
-
-  // show only first 10 categories
-  const limited = categories.slice(0, 10);
-
-  const handleNext = () => {
-    setStartIndex((s) => Math.min(s + 1, Math.max(0, limited.length - visibleCount)));
-  };
-  const handlePrev = () => {
-    setStartIndex((s) => Math.max(0, s - 1));
-  };
+  // categories is expected to be already limited (first 10)
+  const limited = categories;
+  const selectedCategory = limited && limited[selectedIndex] ? limited[selectedIndex].id : null;
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <IconButton onClick={handlePrev} disabled={startIndex <= 0}>
-          <ArrowBackIosNewIcon />
-        </IconButton>
-
-        <Box sx={{ display: 'flex', gap: '1.5rem', overflow: 'hidden', flex: 1 }}>
-          {limited.slice(startIndex, startIndex + visibleCount).map((cat) => (
-            <CategoryCard
-              key={cat.id}
-              label={cat.name}
-              img={cat.image}
-              active={String(selected) === String(cat.id)}
-              onClick={() => {
-                setSelected(cat.id);
-                // navigate to detail page for full paginated view
-                navigate(`/categories/${cat.id}`);
-              }}
-            />
-          ))}
-        </Box>
-
-        <IconButton onClick={handleNext} disabled={startIndex >= Math.max(0, limited.length - visibleCount)}>
-          <ArrowForwardIosIcon />
-        </IconButton>
-      </Box>
-
-      {/* pagination dots */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 1 }}>
-        {limited.map((_, idx) => (
-          <Box
-            key={idx}
-            onClick={() => setStartIndex(Math.max(0, Math.min(idx, limited.length - visibleCount)))}
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              bgcolor: idx >= startIndex && idx < startIndex + visibleCount ? 'primary.main' : 'divider',
-              cursor: 'pointer'
+      <Box sx={{ display: 'flex', gap: '1.5rem', overflow: 'hidden' }}>
+        {limited.slice(startIndex, startIndex + visibleCount).map((cat, idx) => (
+          <CategoryCard
+            key={cat.id}
+            label={cat.name}
+            img={cat.image}
+            active={selectedIndex === startIndex + idx}
+            onClick={() => {
+              setSelectedIndex(startIndex + idx);
+              navigate(`/categories/${cat.id}`);
             }}
           />
         ))}
       </Box>
 
-      {selected && (
+      {/* pagination dots */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 1 }}>
+        {limited.map((_, idx) => {
+          const isActive = idx === selectedIndex;
+          return (
+            <Box
+              key={idx}
+              onClick={() => {
+                const nextStart = Math.max(0, Math.min(idx, limited.length - visibleCount));
+                setStartIndex(nextStart);
+                setSelectedIndex(idx);
+              }}
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                bgcolor: isActive ? theme.palette.custom.btnPrimary.main : theme.palette.grey[300],
+                cursor: 'pointer',
+                transition: 'transform 200ms ease, background-color 200ms ease',
+                transform: isActive ? 'scale(1.3)' : 'scale(1)'
+              }}
+            />
+          );
+        })}
+      </Box>
+
+      {selectedCategory && (
         <Box sx={{ mt: 4 }}>
           {/* quick preview grid; for full paginated view user is navigated to /categories/:id */}
           <ProductList
@@ -89,7 +72,7 @@ export function CategoriesSection() {
             swiper={false}
             limit={8}
             offset={0}
-            categoryId={selected}
+            categoryId={selectedCategory}
           />
         </Box>
       )}

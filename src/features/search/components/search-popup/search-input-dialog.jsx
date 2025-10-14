@@ -2,7 +2,7 @@ import SearchIconImg from "../../../../assets/images/main/search-icon.svg";
 import { debounce } from "../../../../shared/utilities/debounce";
 import { Box, TextField, InputAdornment } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import { styled} from "@mui/material/styles";
 import { useModalStore } from "../../store";
 

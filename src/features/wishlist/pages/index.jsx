@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { alpha, useTheme } from "@mui/material/styles";
 import { ProductList } from "../../products/components/product-list";
 import { ProductItem } from "../../products/components/product-item";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../store/index";
 import { useCart } from "../../products/store/cart";
 import { useEffect } from "react";
@@ -58,6 +58,10 @@ export default function WishListPage() {
     // prefer to remove by the product id prop when available
     const productId = id;
     if (!productId) return;
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[wishlist page] handleRemoveFromWishlist', productId);
+    } catch (e) {}
     removeFromWishlist(productId);
     toast.warning("Product removed from wishlist");
   };
@@ -132,7 +136,7 @@ export default function WishListPage() {
                   actionIcon={
                     <IconButton
                       size="small"
-                      onClick={() => handleRemoveFromWishlist(item.id)}
+                      onClick={() => handleRemoveFromWishlist(safeId)}
                       sx={(theme) => ({
                         display: "flex",
                         alignItems: "center",
@@ -154,7 +158,7 @@ export default function WishListPage() {
                       <DeleteOutlineIcon />
                     </IconButton>
                   }
-                  onAddedToCart={() => removeFromWishlist(item.id)}
+                  onAddedToCart={() => removeFromWishlist(safeId)}
                 />
               </Box>
             );

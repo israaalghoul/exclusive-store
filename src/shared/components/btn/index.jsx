@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import { useTheme } from "@mui/material/styles";
 import { Button, styled } from "@mui/material";

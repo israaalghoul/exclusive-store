@@ -1,4 +1,4 @@
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 import { useIsLoggedIn } from "../hooks/is-logged-in";
 
 export function AuthPageGuard({ children }) {

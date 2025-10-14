@@ -4,7 +4,7 @@ import { lazy } from 'react'
 const CategoryPage = lazy(() => import('../pages'))
 const CategoryDetail = lazy(() => import('../pages/category-detail'))
 
-export const CategoryRoutes = [
+export const categoryRoutes = [
     {
         path: "/category",
         element: 
@@ -12,7 +12,7 @@ export const CategoryRoutes = [
 
     },
     {
-      path: "/categories/:id",
+      path: "/categories/:categoryId",
       element: <CategoryDetail />,
     },
 ]

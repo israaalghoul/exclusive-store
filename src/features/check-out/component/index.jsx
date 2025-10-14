@@ -17,7 +17,7 @@ import {
 import styled from "@emotion/styled";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -269,7 +269,7 @@ export function CheckOut() {
                       style={{ width: 80, height: 80, borderRadius: 4 }}
                     />
                     <Typography sx={{ fontSize: "1.6rem" }}>
-                      {item.name.split(" ").slice(0, 3).join(" ")}
+                      {(item.title || item.name || "").toString().split(" ").slice(0, 3).join(" ")}
                     </Typography>
                   </Box>
                   <Typography sx={{ fontSize: "1.6rem" }}>

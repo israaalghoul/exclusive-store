@@ -4,13 +4,13 @@ import heroImg1 from "../../../assets/images/png/hero1.png";
 import heroImg2 from "../../../assets/images/png/hero2.png";
 import heroImg3 from "../../../assets/images/png/hero3.png";
 import { appRoutes } from "../../../routes/index";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
 export default function SaleCategoryPage() {
   const navigate = useNavigate();
   const targetDate =
-    new Date().getTime() + 5 * 24 * 60 * 60 * 1000 + 23 * 60 * 60 * 1000; // 5 أيام و 23 ساعة
+    new Date().getTime() + 5 * 24 * 60 * 60 * 1000 + 23 * 60 * 60 * 1000; 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,

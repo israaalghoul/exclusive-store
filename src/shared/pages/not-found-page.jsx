@@ -1,12 +1,12 @@
 import { appRoutes } from "../../routes";
 import { Box, Button, Typography, Container } from "@mui/material";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { Breadcrumbs, Link } from "@mui/material";
 import {Btn} from "../../shared/components/btn"
 export default function NotFoundPage() {
   const navigate = useNavigate();
   return (
-    <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, pt: { xs: 2, md: 10 } }}>
+    <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, py: { xs: 2, md: 10 } }}>
       {/* ===== Breadcrumb ===== */}
       <Breadcrumbs aria-label="breadcrumb" >
         <Link

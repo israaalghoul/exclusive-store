@@ -17,7 +17,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../../routes/index";
 export function ProductItem({
   id,
@@ -59,9 +59,11 @@ export function ProductItem({
   const handleAddToFav = () => {
     // toggle wishlist: add if not present, remove if present
     const productId = id || uuidv4();
-    const exists = wishlist.find((w) => String(w.id) === String(id));
+    // check existence using the normalized productId (which may be generated)
+    const exists = wishlist.find((w) => String(w.id) === String(productId));
     if (exists) {
-      removeFromWishlist(id);
+      // remove by the id stored in wishlist (or productId)
+      removeFromWishlist(exists.id || productId);
       toast.warning("Removed from wishlist");
     } else {
       addToWishlist({ id: productId, name: title, images, price });
@@ -183,7 +185,15 @@ export function ProductItem({
             </IconButton>
             <IconButton
               size="small"
-              onClick={() => navigate(appRoutes.detailsProduct)}
+              onClick={() =>
+                navigate(
+                  {
+                    pathname: appRoutes.detailsProduct,
+                    search: `?id=${encodeURIComponent(id)}`,
+                  },
+                  { state: { product: { id, title, images, price } } }
+                )
+              }
               sx={(theme) => ({
                 display: "flex",
                 alignItems: "center",

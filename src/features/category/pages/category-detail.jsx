@@ -1,9 +1,10 @@
 import React from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { Box, Container, Button } from "@mui/material";
+import { Box, Container, Button,Breadcrumbs,Link,Typography } from "@mui/material";
 import ProductsService from "../../products/services/api";
 import { ProductList } from "../../products/components/product-list";
 import { useQuery } from "@tanstack/react-query";
+import { appRoutes } from "../../../routes/index";
 
 export default function CategoryDetailPage() {
   const { id } = useParams();
@@ -28,12 +29,27 @@ export default function CategoryDetailPage() {
   };
 
   return (
-    <Container maxWidth={false}>
-      <Box sx={{ mt: 4 }}>
+    <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, py: { xs: 2, md: 10 } }}>
+      {/* ===== Breadcrumb ===== */}
+      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
+        <Link
+          underline="hover"
+          color="inherit"
+          href={appRoutes.home}
+          style={{ fontSize: "1.4rem" }}
+        >
+          Home
+        </Link>
+
+        <Typography color="text.primary" sx={{ fontSize: "1.4rem" }}>
+          Category 
+        </Typography>
+      </Breadcrumbs>
+      {/* <Box sx={{ mt: 4 }}>
         <Button onClick={() => navigate(-1)} variant="text">
           Back
         </Button>
-      </Box>
+      </Box> */}
 
       <Box sx={{ mt: 2 }}>
         <ProductList
@@ -48,13 +64,27 @@ export default function CategoryDetailPage() {
       </Box>
 
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 4 }}>
-        <Button onClick={() => handlePage(-1)} variant="outlined">
+        <Button
+          onClick={() => handlePage(-1)}
+          variant="outlined"
+          sx={(theme) => ({
+            backgroundColor: theme.palette.custom.btnPrimary.main,
+            color: theme.palette.common.white,
+          })}
+        >
           Prev
         </Button>
-        <Button onClick={() => handlePage(1)} variant="contained">
+        <Button
+          onClick={() => handlePage(1)}
+          variant="contained"
+          sx={(theme) => ({
+            backgroundColor: theme.palette.custom.btnPrimary.main,
+            color: theme.palette.common.white,
+          })}
+        >
           Next
         </Button>
       </Box>
-    </Container>
+    </Box>
   );
 }

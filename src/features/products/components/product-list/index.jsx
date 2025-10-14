@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Container, Skeleton, Button } from "@mui/material";
+import { Box, Container, Skeleton, Button, Pagination } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination as SwiperPagination } from "swiper/modules";
@@ -8,7 +8,7 @@ import "swiper/css/pagination";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import ProductsService from "../../services/api";
 import { ProductItem } from "../product-item";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 export function ProductList({
@@ -74,8 +74,26 @@ export function ProductList({
   const infiniteItems = infiniteQuery.data
     ? infiniteQuery.data.pages.flatMap((p) => p.items)
     : [];
+  // for pagination-based All Products view: fetch full list and slice by page
+  const [page, setPage] = useState(1);
+  const {
+    data: allProducts = [],
+    isLoading: isAllProductsLoading,
+  } = useQuery({
+    queryKey: ["products-all", searchQuery, categoryId],
+    queryFn: async () =>
+      useGetAll
+        ? categoryId
+          ? await ProductsService.getByCategory(categoryId)
+          : await ProductsService.getAll(searchQuery)
+        : [],
+    enabled: useGetAll,
+  });
+
+  const totalPages = useGetAll ? Math.max(1, Math.ceil((allProducts?.length || 0) / pageSize)) : 0;
+  const pagedItems = useGetAll ? (allProducts || []).slice((page - 1) * pageSize, page * pageSize) : [];
   const list = useGetAll
-    ? infiniteItems
+    ? pagedItems
     : allListed || swiper || !useSelected
     ? productsLimit
     : fetchedData;
@@ -398,6 +416,10 @@ export function ProductList({
               onClick={() => infiniteQuery.fetchNextPage()}
               disabled={!infiniteQuery.hasNextPage || infiniteQuery.isFetchingNextPage}
               variant="contained"
+              sx={(theme)=>({backgroundColor:theme.palette.custom.btnPrimary.main,
+                color:"#fff",
+                padding:"0.8rem 2.4rem"
+              })}
             >
               {infiniteQuery.isFetchingNextPage
                 ? "Loading..."
@@ -405,6 +427,35 @@ export function ProductList({
                 ? "Load more"
                 : "No more products"}
             </Button>
+          </Box>
+        )}
+
+        {/* Pagination for All Products view */}
+        {useGetAll && !isAllProductsLoading && totalPages > 0 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(e, value) => {
+                setPage(value);
+                if (rootRef.current && typeof rootRef.current.scrollIntoView === 'function') {
+                  try { rootRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e){}
+                }
+              }}
+              shape="rounded"
+              variant="outlined"
+              sx={{
+                '& .MuiPaginationItem-root': {
+                  color: (theme) => theme.palette.text.primary,
+                  borderColor: (theme) => theme.palette.grey[300],
+                },
+                '& .MuiPaginationItem-root.Mui-selected': {
+                  backgroundColor: (theme) => theme.palette.custom.btnPrimary.main,
+                  color: '#fff',
+                  borderColor: (theme) => theme.palette.custom.btnPrimary.main,
+                }
+              }}
+            />
           </Box>
         )}
 

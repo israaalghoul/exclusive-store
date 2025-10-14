@@ -1,5 +1,5 @@
 import { alpha, styled } from "@mui/material/styles";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 
 import React from "react";

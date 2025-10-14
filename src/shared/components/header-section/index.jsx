@@ -12,7 +12,7 @@ import { Btn } from "../btn";
 import CountdownTimer from "../countdown-time";
 import arrowRightIcon from "../../../assets/images/arrow/arrow-right-icon.svg";
 import arrowLeftIcon from "../../../assets/images/arrow/arrow-left-icon.svg";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../routes";
 
 export function HeaderSection({

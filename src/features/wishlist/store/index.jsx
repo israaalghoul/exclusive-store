@@ -40,7 +40,26 @@ export function WishlistProvider({ children }) {
 
   const removeFromWishlist = (id) => {
     const norm = normalizeId(id);
-    setWishlist((prev) => prev.filter((item) => item.id !== norm));
+    // diagnostic logging to help debug removal issues (show types)
+    try {
+      // eslint-disable-next-line no-console
+      // console.log('[wishlist] removeFromWishlist called with id:', id, 'typeof id:', typeof id, 'normalized:', norm, 'typeof norm:', typeof norm);
+    } catch (e) {}
+    setWishlist((prev) => {
+      // compare as strings to avoid number/string mismatches
+      const next = prev.filter((item) => String(item.id) !== String(norm));
+      try {
+        // eslint-disable-next-line no-console
+        // console.log('[wishlist] before ids (with types):', prev.map((p) => ({ id: p.id, type: typeof p.id })), 'after ids (with types):', next.map((n) => ({ id: n.id, type: typeof n.id })));
+      } catch (e) {}
+      // also log what's in localStorage after update to ensure persistence
+      try {
+        const stored = wishlistStorage.get();
+        // eslint-disable-next-line no-console
+        // console.log('[wishlist] localStorage snapshot before returning next:', stored);
+      } catch (e) {}
+      return next;
+    });
   };
 
   const clearWishlist = () => setWishlist([]);

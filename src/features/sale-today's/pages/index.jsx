@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { ProductList } from "../../products/components/product-list";
 import { HeaderSection } from "../../../shared/components/header-section";
 import {Btn} from "../../../shared/components/btn"
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../routes";
 export default function SaleTodayPage() {
   const theme = useTheme();
