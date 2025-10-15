@@ -22,6 +22,9 @@ import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
 import React, { useState, useEffect } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const SaleBar = styled(Box)(({ theme }) => ({
   ...styleNavSale.saleBarStyle(theme),
@@ -34,6 +37,7 @@ const AppBarStyle = styled(AppBar)(({ theme, open }) => ({
 
 export function Navbar() {
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState(null);
   const [hovered, setHovered] = useState(false);
   const { cart, openCart } = useCart();
   const { wishlist, openWishlist } = useWishlist();
@@ -46,6 +50,12 @@ export function Navbar() {
   };
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
+  const handleOpen = (e) => setAnchorEl(e.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+  const handleNavigateFromMobile = (to) => {
+    setAnchorEl(null);
+    navigate(to);
+  };
   const handleOpenSaleBar = () => {
     setOpen(true);
   };
@@ -65,7 +75,9 @@ export function Navbar() {
   }, [location.pathname]);
 
   return (
-    <Box sx={{ flexGrow: 1, pt: open ? "130px" : "85px" }}>
+    <Box sx={{ flexGrow: 1, pt: open ? "130px" : "85px" , "@media screen and (max-width: 320px)": {
+    pt: "108px",
+  },}}>
       <Collapse in={open}>
         <SaleBar onClick={() => setOpen(false)}>
           <div>
@@ -154,6 +166,7 @@ export function Navbar() {
             {/* icons */}
             {!hideIcons && (
               <Box sx={{ ...styleNavApp.iconStyle }}>
+                {/* Favorites */}
                 <IconButton
                   aria-label="favorites"
                   onMouseEnter={() => setHovered(true)}
@@ -175,43 +188,27 @@ export function Navbar() {
                     },
                   })}
                 >
-                  {hovered ? (
-                    <Badge
-                      badgeContent={countWishlist}
-                      color="primary"
-                      sx={(theme) => ({
-                        "& .MuiBadge-badge": {
-                          backgroundColor: theme.palette.custom.btnPrimary.main,
-                          color: theme.palette.custom.btnPrimary.contrastText,
-                          fontWeight: 400,
-                          fontSize: "1.2rem",
-                        },
-                      })}
-                    >
-                      <FavoriteIcon
-                        sx={{
-                          transition: "transform 0.2s",
-                          transform: "scale(1.1)",
-                        }}
-                      />
-                    </Badge>
-                  ) : (
-                    <Badge
-                      badgeContent={countWishlist}
-                      color="primary"
-                      sx={(theme) => ({
-                        "& .MuiBadge-badge": {
-                          backgroundColor: theme.palette.custom.btnPrimary.main,
-                          color: theme.palette.custom.btnPrimary.contrastText,
-                          fontWeight: 400,
-                          fontSize: "1.2rem",
-                        },
-                      })}
-                    >
+                  <Badge
+                    badgeContent={countWishlist}
+                    color="primary"
+                    sx={(theme) => ({
+                      "& .MuiBadge-badge": {
+                        backgroundColor: theme.palette.custom.btnPrimary.main,
+                        color: theme.palette.custom.btnPrimary.contrastText,
+                        fontWeight: 400,
+                        fontSize: "1.2rem",
+                      },
+                    })}
+                  >
+                    {hovered ? (
+                      <FavoriteIcon sx={{ transform: "scale(1.1)" }} />
+                    ) : (
                       <FavoriteBorderIcon />
-                    </Badge>
-                  )}
+                    )}
+                  </Badge>
                 </IconButton>
+
+                {/* Cart */}
                 <IconButton
                   aria-label="cart"
                   sx={(theme) => ({
@@ -245,6 +242,7 @@ export function Navbar() {
                   </Badge>
                 </IconButton>
 
+                {/* User menu */}
                 {user && (
                   <IconButton
                     sx={(theme) => ({
@@ -271,9 +269,69 @@ export function Navbar() {
                 )}
               </Box>
             )}
+
+            {/* mobile hamburger icon (visible xs only) */}
+            <Box
+              sx={{
+                display: { xs: "flex", sm: "none" },
+                alignItems: "center",
+              }}
+            >
+              <IconButton
+                id="mobile-nav-button"
+                aria-label="open navigation"
+                onClick={handleOpen}
+                sx={{
+                  color: "#333333ff",
+                  width: 34,
+                  height: 34,
+                  "& .MuiSvgIcon-root": {
+                    fontSize: 24,
+                  },
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
           </Box>
         </Container>
       </AppBarStyle>
+      {/* Mobile dropdown menu for nav links */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        PaperProps={{
+          elevation: 6,
+          sx: {
+            mt: 1.5,
+            borderRadius: 0.5,
+            minWidth: 224,
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            color: "#000",
+            "& .MuiMenuItem-root:hover": {
+              background: "rgba(136, 136, 136, 0.4)",
+            },
+          },
+        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <MenuItem onClick={() => handleNavigateFromMobile(appRoutes.home)}>
+          Home
+        </MenuItem>
+        <MenuItem onClick={() => handleNavigateFromMobile(appRoutes.contact)}>
+          Contact
+        </MenuItem>
+        <MenuItem onClick={() => handleNavigateFromMobile(appRoutes.about)}>
+          About
+        </MenuItem>
+        <MenuItem
+          onClick={() => handleNavigateFromMobile(appRoutes.auth.signUp)}
+        >
+          Sign Up
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }

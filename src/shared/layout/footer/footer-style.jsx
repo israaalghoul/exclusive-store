@@ -25,7 +25,7 @@ export const styleFooter = {
       padding: "2.4rem 3.5rem",
     },
     "@media (min-width: 1024px)": {
-      padding: "4.0rem 13.5rem",
+      padding: "4.0rem 8.0rem",
       gap: "6rem",
     },
     "@media (min-width: 1440px)": {

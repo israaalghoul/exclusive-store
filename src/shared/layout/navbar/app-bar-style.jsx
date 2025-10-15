@@ -23,22 +23,21 @@ export const styleNavApp = {
 
     ///////////// RESPONSIVE //////////////
     "@media (max-width: 320px)": {
-      flexDirection: "column",
       gap: "2rem",
       padding: "1.6rem",
     },
     "@media (min-width:321px)": {
-      flexDirection: "column",
+
       gap: "2rem",
-      padding: "2.0rem 4rem",
+      padding: "4.6rem 4rem 2.4rem",
     },
     "@media (min-width: 768px)": {
-      flexDirection: "row",
+     
       gap: "1.8rem",
       padding: "2.4rem 3.5rem",
     },
     "@media (min-width: 1024px)": {
-      padding: "4.0rem 13.5rem 1.6rem",
+      padding: "4.0rem 8.0rem 1.6rem",
       gap: "6rem",
     },
     "@media (min-width: 1440px)": {

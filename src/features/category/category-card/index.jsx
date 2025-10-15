@@ -9,7 +9,7 @@ export function CategoryCard({ icon: Icon, label, active, img, onClick }) {
   const bgColor = isActiveOrHover
     ? theme.palette.custom.btnPrimary.main
     : "transparent";
-  const textColor = isActiveOrHover ? "#fff" : theme.palette.text.primary;
+  const textColor = isActiveOrHover ? theme.palette.custom.btnPrimary.contrastText : theme.palette.text.primary;
 
   return (
     <Box
@@ -17,7 +17,8 @@ export function CategoryCard({ icon: Icon, label, active, img, onClick }) {
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       sx={{
-        width: 170,
+        width:"100%",
+        minWidth: 170,
         height: 145,
         borderRadius: 2,
         border: `1px solid ${theme.palette.divider}`,

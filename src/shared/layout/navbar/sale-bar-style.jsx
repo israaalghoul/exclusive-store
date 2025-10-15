@@ -1,3 +1,5 @@
+import { m } from "framer-motion";
+
 export const styleNavSale = {
   ///////////////////////////////////SALE BAR STYLE
   saleBarStyle: (theme) => ({
@@ -12,24 +14,20 @@ export const styleNavSale = {
     justifyContent: "center",
     gap: "1.3rem",
     position: "fixed",
-    cursor: "pointer", 
+    cursor: "pointer",
     top: 0,
-  left: 0,
-  right: 0,
-     zIndex: theme.zIndex.appBar + 2,
+    left: 0,
+    right: 0,
+    zIndex: theme.zIndex.appBar + 2,
     ///////////// RESPONSIVE //////////////
-    "@media (max-width: 320px)": {
-      flexDirection: "column",
-      gap: "0.4rem",
-      padding: "1rem",
-    },
+     "@media screen and (max-width: 320px)": {
+    display: "none",
+  },
     "@media (min-width:321px)": {
-      flexDirection: "column",
       gap: "0.4rem",
       padding: "1rem",
     },
     "@media (min-width: 768px)": {
-      flexDirection: "row",
       fontSize: "1.2rem",
       padding: "0.777rem 5rem",
     },
@@ -44,7 +42,7 @@ export const styleNavSale = {
     textDecoration: "underline",
     fontSize: 14,
     fontWeight: 600,
-   
+  
     ///////////// RESPONSIVE //////////////
     "@media (min-width: 768px)": {
       fontSize: "1.2rem",

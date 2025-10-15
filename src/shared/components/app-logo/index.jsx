@@ -8,6 +8,13 @@ const AppLogoStyle = styled(Typography, {
 })(({ theme, colorKey = "primary", shade = "light" }) => ({
   color: theme.palette[colorKey][shade],
   cursor: "pointer",
+  ///////////// RESPONSIVE //////////////
+    "@media (min-width: 321px)": {
+      fontSize: "2.0rem", 
+    },
+      "@media (min-width:768px)": {
+      fontSize: "2.4rem", 
+    },
 }));
 
 

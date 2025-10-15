@@ -24,8 +24,8 @@ export const MyContainer = styled(Container)(({ theme }) => ({
   paddingRight: theme.spacing(4.375),
     },
     "@media (min-width: 1024px)": {
-  paddingLeft: theme.spacing(12),
-  paddingRight: theme.spacing(12),
+  paddingLeft: theme.spacing(10),
+  paddingRight: theme.spacing(10),
     },
      "@media (min-width: 1440px)": {
   paddingLeft: theme.spacing(16.875),
