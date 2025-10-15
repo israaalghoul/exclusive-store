@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
-import { ProductList } from "../../products/components/product-list";
-import { HeaderSection } from "../../../shared/components/header-section";
+import { ProductList } from "../../../products/components/product-list";
+import { HeaderSection } from "../../../../shared/components/header-section";
 import { useState } from "react";
-import {Btn} from "../../../shared/components/btn"
+import {Btn} from "../../../../shared/components/btn"
 import { useNavigate } from "react-router-dom";
-import { appRoutes } from "../../../routes";
+import { appRoutes } from "../../../../routes";
 
-export default function ExploreProductsPage() {
+export default function ExploreProducts() {
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const totalItems = 8;

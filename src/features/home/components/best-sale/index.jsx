@@ -1,10 +1,10 @@
 import { Box} from "@mui/material";
 import { alpha,useTheme } from "@mui/material/styles";
-import { ProductList } from "../../products/components/product-list";
-import {HeaderSection} from "../../../shared/components/header-section";
+import { ProductList } from "../../../products/components/product-list";
+import {HeaderSection} from "../../../../shared/components/header-section";
 
 
-export default function BestSalePage() {
+export default function BestSale() {
   const theme = useTheme();
   return (
     <Box

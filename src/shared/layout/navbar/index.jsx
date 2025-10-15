@@ -6,7 +6,7 @@ import { Box, Collapse, IconButton, useTheme } from "@mui/material";
 import { useMenuStore } from "../../../features/account-menu/store";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useCart } from "../../../features/products/store/cart";
+import { useCart } from "../../../features/cart/store/cart-store";
 import { useWishlist } from "../../../features/wishlist/store";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { AppLogo } from "../../components/app-logo";

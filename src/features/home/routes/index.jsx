@@ -1,29 +1,26 @@
 import { lazy } from "react";
-// import { DefaultLayout } from '../../../shared/layout/default-layout'
-// const HomePage = lazy(() => import('../pages'))
-const SalePage = lazy(() => import("../../sale/pages"));
-const SaleTodayPage = lazy(() => import("../../sale-today's/pages"));
+const TopSale = lazy(() => import("../components/top-sale"));
+const BestSale = lazy(() => import("../components/best-sale"));
 const CategoryPage = lazy(() => import("../../category/pages"));
-const BestSalePage = lazy(() => import("../../best-sale/pages"));
-const ExploreProductsPage = lazy(() => import("../../explore-products/pages"));
-const SaleCategoryPage = lazy(() => import("../../sale-category/pages"));
-const NewArrivalPage = lazy(() => import("../../new-arrival/pages"));
-const DeliveryPage = lazy(() => import("../../delivery-section"));
+const SaleToday = lazy(() => import("../components/sale-today"));
+const NewArrival = lazy(() => import("../components/new-arrival"));
+const SaleCategory = lazy(() => import("../components/sale-category"));
+const ExploreProducts = lazy(() => import("../components/explore-products"));
+const ServiceFeatures = lazy(() => import("../components/service-features"));
 
 export const homeRoutes = [
   {
     path: "/",
     element: (
       <>
-        {/* <HomePage /> */}
-        <SalePage />
-        <SaleTodayPage />
+        <TopSale />
+        <SaleToday />
         <CategoryPage />
-        <BestSalePage />
-        <SaleCategoryPage />
-        <ExploreProductsPage />
-        <NewArrivalPage />
-        <DeliveryPage />
+        <BestSale />
+        <SaleCategory />
+        <ExploreProducts />
+        <NewArrival />
+        <ServiceFeatures />
         
       </>
     ),

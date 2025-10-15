@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { HeaderSection } from "../../../shared/components/header-section";
-import { appRoutes } from "../../../routes";
-import newArrival1 from "../../../assets/images/png/new-arrival1.png";
-import newArrival2 from "../../../assets/images/png/new-arrival2.png";
-import newArrival3 from "../../../assets/images/png/new-arrival3.png";
-import newArrival4 from "../../../assets/images/png/new-arrival4.png";
+import { HeaderSection } from "../../../../shared/components/header-section";
+import { appRoutes } from "../../../../routes";
+import newArrival1 from "../../../../assets/images/png/new-arrival1.png";
+import newArrival2 from "../../../../assets/images/png/new-arrival2.png";
+import newArrival3 from "../../../../assets/images/png/new-arrival3.png";
+import newArrival4 from "../../../../assets/images/png/new-arrival4.png";
 
 // General Component
 const NewArrivalCard = ({ image, title, description, height, onClick }) => (
@@ -73,7 +73,7 @@ const NewArrivalCard = ({ image, title, description, height, onClick }) => (
   </Box>
 );
 
-export default function NewArrivalPage() {
+export default function NewArrival() {
   const navigate = useNavigate();
 
   const handleShopNow = () => navigate(appRoutes.home);

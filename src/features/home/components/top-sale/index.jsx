@@ -4,12 +4,12 @@ import { Box, Typography, Button} from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { List, ListItemButton, ListItemText, Divider } from "@mui/material";
-import RightArrowIconImg from "../../../assets/images/arrow/RightArrow.svg";
-import heroImg1 from "../../../assets/images/png/hero1.png";
-import heroImg2 from "../../../assets/images/png/hero2.png";
-import heroImg3 from "../../../assets/images/png/hero3.png";
+import RightArrowIconImg from "../../../../assets/images/arrow/RightArrow.svg";
+import heroImg1 from "../../../../assets/images/png/hero1.png";
+import heroImg2 from "../../../../assets/images/png/hero2.png";
+import heroImg3 from "../../../../assets/images/png/hero3.png";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {appRoutes} from "../../../routes/index";
+import {appRoutes} from "../../../../routes/index";
 import { useNavigate } from "react-router-dom";
 
 import "swiper/css";
@@ -17,8 +17,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-export default function SalePage() {
-    const navigate = useNavigate();
+export default function TopSale() {
+  const navigate = useNavigate();
   const slides = [
     {
       id: 1,

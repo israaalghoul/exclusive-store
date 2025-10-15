@@ -17,7 +17,7 @@ import ProductsService from "../../products/services/api";
 import AddIcon from "@mui/icons-material/Add";
 import { appRoutes } from "../../../routes/index";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useCart } from "../../products/store/cart";
+import { useCart } from "../../cart/store/cart-store";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import details from "../../../assets/images/png/Frame 919.png";
 import imageFake from "../../../assets/images/png/Frame 894.png";

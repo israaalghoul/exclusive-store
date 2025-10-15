@@ -25,7 +25,7 @@ import DialogActions from "@mui/material/DialogActions";
 import { userStorage } from "../../auth/storage";
 import React, { useState, useEffect } from "react";
 import { appRoutes } from "../../../routes/index";
-import { useCart } from "../../products/store/cart";
+import { useCart } from "../../cart/store/cart-store";
 import { useGetMeQuery } from "../../auth/services/queries";
 
 const TextFieldCustom = styled(TextField)(({ theme }) => ({
@@ -47,14 +47,34 @@ const TextFieldCustom = styled(TextField)(({ theme }) => ({
     fontSize: "1.4rem",
   },
 }));
-const ButtonNav = styled(Button)(({ theme }) => ({
-  textTransform: "none",
-  color: "#505050ff",
-  fontWeight: 400,
+const RadioGroupCustom = styled(RadioGroup)(({ theme }) => ({
+  mt: 2,
+  "& .MuiFormControlLabel-label": {
+    fontSize: "1.6rem",
+    fontWeight: 400,
+  },
+  "& .MuiRadio-root": {
+    transform: "scale(1.4)",
+    paddingLeft: "1.4rem",
+  },
+  "& .MuiSvgIcon-root": {
+    fontSize: "2.2rem",
+  },
+}));
+const TextFieldCoupon = styled(TextField)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    fontSize: "1.4rem",
+    fontWeight: 400,
+    height: "4.0rem",
+  },
+  "& .MuiInputLabel-root": {
+    fontSize: "1.6rem",
+    padding: "1.0rem",
+  },
 }));
 export function CheckOut() {
   const navigate = useNavigate();
-  const { cart, totalPrice, clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const { data: me } = useGetMeQuery();
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -85,13 +105,10 @@ export function CheckOut() {
   }, [me, reset]);
 
   const onSubmit = (data) => {
-    // console.log(data);
-    // clear cart and show order confirmation dialog
     try {
+      // clear cart and show order confirmation dialog
       clearCart();
     } catch (err) {
-      // ignore clearing errors
-      // eslint-disable-next-line no-console
       console.error("clearCart error", err);
     }
     setOrderPlaced(true);
@@ -269,7 +286,11 @@ export function CheckOut() {
                       style={{ width: 80, height: 80, borderRadius: 4 }}
                     />
                     <Typography sx={{ fontSize: "1.6rem" }}>
-                      {(item.title || item.name || "").toString().split(" ").slice(0, 3).join(" ")}
+                      {(item.title || item.name || "")
+                        .toString()
+                        .split(" ")
+                        .slice(0, 3)
+                        .join(" ")}
                     </Typography>
                   </Box>
                   <Typography sx={{ fontSize: "1.6rem" }}>
@@ -304,23 +325,9 @@ export function CheckOut() {
                 <Typography sx={{ fontSize: "1.6rem" }}>${total}</Typography>
               </Box>
 
-              <RadioGroup
+              <RadioGroupCustom
                 defaultValue="cash"
                 {...register("paymentMethod")}
-                sx={{
-                  mt: 2,
-                  "& .MuiFormControlLabel-label": {
-                    fontSize: "1.6rem",
-                    fontWeight: 400,
-                  },
-                  "& .MuiRadio-root": {
-                    transform: "scale(1.4)",
-                    paddingLeft: "1.4rem",
-                  },
-                  "& .MuiSvgIcon-root": {
-                    fontSize: "2.2rem",
-                  },
-                }}
               >
                 <FormControlLabel
                   value="bank"
@@ -332,25 +339,10 @@ export function CheckOut() {
                   control={<Radio />}
                   label="Cash on delivery"
                 />
-              </RadioGroup>
+              </RadioGroupCustom>
 
               <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-                <TextField
-                  label="Coupon Code"
-                  fullWidth
-                  size="small"
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: "1.4rem",
-                      fontWeight: 400,
-                      height: "4.0rem",
-                    },
-                    "& .MuiInputLabel-root": {
-                      fontSize: "1.6rem",
-                      padding: "1.0rem",
-                    },
-                  }}
-                />
+                <TextFieldCoupon label="Coupon Code" fullWidth size="small" />
 
                 <Button
                   variant="contained"
@@ -378,7 +370,7 @@ export function CheckOut() {
               >
                 Place Order
               </Button>
-              <Dialog           
+              <Dialog
                 open={openAuthModal}
                 onClose={() => setOpenAuthModal(false)}
                 aria-labelledby="auth-required-dialog"
@@ -391,12 +383,23 @@ export function CheckOut() {
                     Please sign up or login to complete your purchase.
                   </Typography>
                 </DialogContent>
-                <DialogActions sx={{display:"flex", justifyContent:"center" ,gap:"1.2rem", mb:1}}>
+                <DialogActions
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "1.2rem",
+                    mb: 1,
+                  }}
+                >
                   <Button
                     onClick={() => {
                       setOpenAuthModal(false);
                       // include redirect back to checkout after signup
-                      navigate(`${appRoutes.auth.signUp}?redirect=${encodeURIComponent(appRoutes.checkOut)}`);
+                      navigate(
+                        `${appRoutes.auth.signUp}?redirect=${encodeURIComponent(
+                          appRoutes.checkOut
+                        )}`
+                      );
                     }}
                     sx={(theme) => ({
                       backgroundColor: theme.palette.custom.btnPrimary.main,
@@ -406,13 +409,14 @@ export function CheckOut() {
                   >
                     Sign Up
                   </Button>
-                  <Button onClick={() => setOpenAuthModal(false)}
+                  <Button
+                    onClick={() => setOpenAuthModal(false)}
                     sx={(theme) => ({
                       backgroundColor: "#5a5a5aff",
                       color: "#fff",
                     })}
                     variant="contained"
-                    >
+                  >
                     Cancel
                   </Button>
                 </DialogActions>
@@ -422,25 +426,40 @@ export function CheckOut() {
                 onClose={() => setOrderPlaced(false)}
                 aria-labelledby="order-placed-dialog"
               >
-                <DialogTitle id="order-placed-dialog">Order Placed Successfully!</DialogTitle>
+                <DialogTitle id="order-placed-dialog">
+                  Order Placed Successfully!
+                </DialogTitle>
                 <DialogContent>
                   <Typography>Your order has been placed.</Typography>
                 </DialogContent>
-                <DialogActions sx={{ display: "flex", justifyContent: "center", gap: "1.2rem", mb: 1 }}>
+                <DialogActions
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "1.2rem",
+                    mb: 1,
+                  }}
+                >
                   <Button
                     variant="contained"
                     onClick={() => {
                       setOrderPlaced(false);
                       navigate(appRoutes.home);
                     }}
-                    sx={(theme) => ({ backgroundColor: theme.palette.custom.btnPrimary.main, color: "#fff" })}
+                    sx={(theme) => ({
+                      backgroundColor: theme.palette.custom.btnPrimary.main,
+                      color: "#fff",
+                    })}
                   >
                     Continue shopping
                   </Button>
                   <Button
                     variant="contained"
                     onClick={() => setOrderPlaced(false)}
-                    sx={(theme) => ({ backgroundColor: "#5a5a5aff", color: "#fff" })}
+                    sx={(theme) => ({
+                      backgroundColor: "#5a5a5aff",
+                      color: "#fff",
+                    })}
                   >
                     Close
                   </Button>

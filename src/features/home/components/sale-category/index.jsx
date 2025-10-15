@@ -1,13 +1,13 @@
 import { alpha, styled } from "@mui/material/styles";
 import { Box, Typography, Button, Grid, Paper } from "@mui/material";
-import heroImg1 from "../../../assets/images/png/hero1.png";
-import heroImg2 from "../../../assets/images/png/hero2.png";
-import heroImg3 from "../../../assets/images/png/hero3.png";
-import { appRoutes } from "../../../routes/index";
+import heroImg1 from "../../../../assets/images/png/hero1.png";
+import heroImg2 from "../../../../assets/images/png/hero2.png";
+import heroImg3 from "../../../../assets/images/png/hero3.png";
+import { appRoutes } from "../../../../routes/index";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
-export default function SaleCategoryPage() {
+export default function SaleCategory() {
   const navigate = useNavigate();
   const targetDate =
     new Date().getTime() + 5 * 24 * 60 * 60 * 1000 + 23 * 60 * 60 * 1000; 

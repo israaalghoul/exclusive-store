@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const CartContext = createContext();
 
-export function CartProvider({ children }) {
+export function CartStore({ children }) {
   const cartStorage = dataStorage("cart");
   const normalizeId = (id) => {
     if (id === undefined || id === null) return null;
@@ -34,14 +34,6 @@ export function CartProvider({ children }) {
       return [...prev, { ...productWithId, quantity: Number(quantity) }];
     });
   };
-
-  // const categoryImages = (id)=>{
-  //       setCart((prev) =>
-  //         prev.flatMap ((item) =>
-  //          item.category?.images || []
-  //     ));
-  // }
-
 
   const increaseQty = (id) => {
     const norm = normalizeId(id);
@@ -94,7 +86,6 @@ export function CartProvider({ children }) {
         isOpen,
         openCart,
         closeCart,
-        // categoryImages,
       }}
     >
       {children}

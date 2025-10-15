@@ -10,7 +10,7 @@ import {
   CardContent,
   Divider,
 } from "@mui/material";
-import ServiceFeatures from "../../delivery-section";
+import ServiceFeatures from "../../home/components/service-features";
 // MUI Icons
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";

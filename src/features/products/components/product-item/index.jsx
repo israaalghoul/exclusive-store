@@ -10,7 +10,7 @@ import {
   Rating,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import { useCart } from "../../store/cart";
+import { useCart } from "../../../cart/store/cart-store";
 import { useWishlist } from "../../../wishlist/store/index";
 import { useTheme } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";

@@ -8,10 +8,10 @@ import { wishListRoutes } from "../features/wishlist/routes";
 import { productsRoutes } from "../features/products/routes";
 import { checkOutRoutes } from "../features/check-out/routes";
 import { DefaultLayout } from "../shared/layout/default-layout";
-import { saleTodayRoutes } from "../features/sale-today's/routes";
-import { newArrivalRoutes } from "../features/new-arrival/routes";
-import { createBrowserRouter, createHashRouter, RouterProvider } from "react-router-dom";
-import { saleCategoryRoutes } from "../features/sale-category/routes";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import { categoryRoutes } from "../features/category/routes";
 import { detailsProductRoutes } from "../features/details-product/routes";
 
@@ -26,12 +26,9 @@ const routes = [
       ...productsRoutes,
       ...authRoutes,
       ...cartRoutes,
-      ...saleTodayRoutes,
       ...checkOutRoutes,
-  ...detailsProductRoutes,
-  ...categoryRoutes,
-  ...saleCategoryRoutes,
-      ...newArrivalRoutes,
+      ...detailsProductRoutes,
+      ...categoryRoutes,
       ...aboutRoutes,
       ...contactRoutes,
       ...wishListRoutes,

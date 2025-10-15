@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { alpha, styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/material";
-import { ProductList } from "../../products/components/product-list";
-import { HeaderSection } from "../../../shared/components/header-section";
-import {Btn} from "../../../shared/components/btn"
+import { ProductList } from "../../../products/components/product-list";
+import { HeaderSection } from "../../../../shared/components/header-section";
+import {Btn} from "../../../../shared/components/btn"
 import { useNavigate } from "react-router-dom";
-import { appRoutes } from "../../../routes";
-export default function SaleTodayPage() {
+import { appRoutes } from "../../../../routes";
+export default function SaleToday() {
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const totalItems = 8;
@@ -15,7 +15,7 @@ export default function SaleTodayPage() {
     setSelectedIndex((i) => Math.min(i + 1, totalItems - 1));
   const handlePrev = () => setSelectedIndex((i) => Math.max(i - 1, 0));
       const navigate = useNavigate();
-      console.log("111");
+      // console.log("111");
   return (
     <Box
       sx={(theme) => ({

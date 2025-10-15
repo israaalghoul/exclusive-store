@@ -15,6 +15,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import { alpha, styled } from "@mui/material/styles";
 import { appRoutes } from "../../../routes/index";
 import { motion } from "framer-motion";
+import { Btn } from "../../../shared/components/btn";
 
 const TextFieldCustom = styled(TextField)(({ theme }) => ({
   backgroundColor: "#F5F5F5",
@@ -46,7 +47,6 @@ const TextFieldCustom = styled(TextField)(({ theme }) => ({
     "& .MuiInputBase-input": {
       fontSize: "1.6rem",
       fontWeight: 400,
-      
     },
   },
 }));
@@ -258,7 +258,7 @@ export default function ContactPage() {
           style={{ flex: 2 }}
         >
           {/* Right Form Section */}
-          <Paper elevation={1} sx={{ flex: 2, px: 4,py:5 }}>
+          <Paper elevation={1} sx={{ flex: 2, px: 4, py: 5 }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Row of Inputs */}
               <Box
@@ -280,8 +280,8 @@ export default function ContactPage() {
                   fullWidth
                   size="small"
                   {...register("name", { required: "Name is required" })}
-                    error={!!errors.name}
-                    helperText={errors.name?.message}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
                 />
                 <TextFieldCustom
                   label={
@@ -299,8 +299,8 @@ export default function ContactPage() {
                       message: "Invalid email address",
                     },
                   })}
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
                 />
                 <TextFieldCustom
                   label={
@@ -312,8 +312,8 @@ export default function ContactPage() {
                   fullWidth
                   size="small"
                   {...register("phone", { required: "Phone is required" })}
-                    error={!!errors.phone}
-                    helperText={errors.phone?.message}
+                  error={!!errors.phone}
+                  helperText={errors.phone?.message}
                 />
               </Box>
 
@@ -335,22 +335,14 @@ export default function ContactPage() {
                   mt: 4.5,
                 }}
               >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{
-                    fontSize: "1.6rem",
-                    fontWeight: 500,
-                    backgroundColor: "error.main",
-                    color: "#fff",
-                    "&:hover": { backgroundColor: "error.dark" },
-                    borderRadius: 0.5,
-                    textTransform: "none",
-                    px: 3,
-                  }}
-                >
-                  Send Message
-                </Button>
+                <Btn
+                  btnName="Send Message"
+                  variantColor="btnPrimary"
+                  px="0rem"
+                  py="0rem"
+                  width="23.0rem"
+                  height="5.6rem"
+                />
               </Box>
             </form>
           </Paper>

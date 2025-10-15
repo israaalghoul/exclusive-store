@@ -13,7 +13,7 @@ import { ProductList } from "../../products/components/product-list";
 import { ProductItem } from "../../products/components/product-item";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../store/index";
-import { useCart } from "../../products/store/cart";
+import { useCart } from "../../cart/store/cart-store";
 import { useEffect } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
