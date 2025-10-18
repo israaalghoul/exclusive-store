@@ -37,6 +37,7 @@ export function HeaderSection({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
+     
       }}
     >
       <Box
@@ -46,6 +47,9 @@ export function HeaderSection({
           marginTop: marginTop,
           gap: "8.7rem",
           alignItems: "flex-end",
+           "@media (max-width:700px)": {
+        marginTop: "3.0rem",
+        },
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: "2.4rem" }}>

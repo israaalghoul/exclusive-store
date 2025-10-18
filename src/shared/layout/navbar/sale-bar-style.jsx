@@ -21,11 +21,14 @@ export const styleNavSale = {
     zIndex: theme.zIndex.appBar + 2,
     ///////////// RESPONSIVE //////////////
      "@media screen and (max-width: 320px)": {
-    display: "none",
+      gap: "0.4rem",
+      padding: "1rem",
+       fontSize: "0.8rem",
   },
     "@media (min-width:321px)": {
       gap: "0.4rem",
       padding: "1rem",
+         fontSize: "1.1",
     },
     "@media (min-width: 768px)": {
       fontSize: "1.2rem",
@@ -34,6 +37,7 @@ export const styleNavSale = {
     "@media (min-width: 1024px)": {
       padding: "0.777rem 13.5rem",
       fontSize: "1.4rem",
+      
     },
   }),
   ///////////////////////////////////SHOP BTN STYLE
@@ -44,6 +48,9 @@ export const styleNavSale = {
     fontWeight: 600,
   
     ///////////// RESPONSIVE //////////////
+    "@media (max-width: 320px)": {
+     display: "none",
+    },
     "@media (min-width: 768px)": {
       fontSize: "1.2rem",
     },
@@ -61,8 +68,7 @@ export const styleNavSale = {
     position: "absolute",
     ///////////// RESPONSIVE //////////////
     "@media (max-width: 320px)": {
-      position: "static",
-      alignSelf: "center",
+      display: "none",
     },
     "@media (min-width: 321px)": {
       position: "static",

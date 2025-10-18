@@ -3,7 +3,6 @@ export const appRoutes = {
     products: {
         list: '/products',
         all:'/products/all',
-
     },
     auth: {
         login: '/login',
@@ -18,5 +17,4 @@ export const appRoutes = {
     about:'/about',
     contact:'/contact',
     wishlist:'/wishlist',
-
 }

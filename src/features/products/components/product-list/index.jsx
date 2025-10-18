@@ -10,6 +10,7 @@ import ProductsService from "../../services/api";
 import { ProductItem } from "../product-item";
 import { useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { Loader } from "../../../../shared/components/loader";
 
 export function ProductList({
   limit = 10,
@@ -247,8 +248,15 @@ export function ProductList({
       </Box>
     );
   }
+      if (isLoading) {
+          return (
+              <div style={{ display: 'flex', justifyContent: 'center',padding:"8.0rem" }}>
+                  <Loader />
+              </div>
+          )
+      }
   // Skeletons loading & offline
-  if (!isOnline || isLoading) {
+  if (!isOnline) {
     return (
       <Box sx={{ display: "flex", gap: 3, overflow: "hidden", pb: 4 }}>
         {[...Array(4)].map((_, i) => (
@@ -284,9 +292,10 @@ export function ProductList({
       ref={rootRef}
       maxWidth={false}
       disableGutters
-      sx={{ position: "relative", overflow: "visible", p: 0 }}
+      sx={{ position: "relative", overflow: "hidden", p: 0 }}
     >
-      <Box sx={{ overflow: "visible"}}>
+      {/* prevent horizontal page overflow from Swiper slides */}
+      <Box sx={{ overflowX: "hidden", overflowY: "visible", width: '100%' }}>
         {swiper ? (
           <Swiper
             modules={[SwiperPagination]}
@@ -294,13 +303,23 @@ export function ProductList({
             spaceBetween={30}
             pagination={{ clickable: true }}
             onSwiper={(s) => (swiperRef.current = s)}
-            style={{ overflow: "visible", paddingBottom: 40 }}
+            style={{
+              paddingBottom: 40,
+              boxSizing: 'border-box',
+              width: '100%',
+              // absorb horizontal spacing on small widths to avoid overflow
+              marginLeft: '-16px',
+              marginRight: '-16px',
+            }}
           >
             {list.map((item, index) => (
               <SwiperSlide
                 key={item.id ?? index}
                 style={{
-                  width: 270,
+                  // use flex-basis/minWidth so slides stay within the container
+                  flex: '0 0 auto',
+                  minWidth: 270,
+                  maxWidth: 270,
                   display: "flex",
                   justifyContent: "center",
                 }}
@@ -396,6 +415,7 @@ export function ProductList({
               gap: "3.0rem",
               width: "100%",
               flexWrap: "wrap",
+              boxSizing: 'border-box',
             }}
           >
             {list.map((item, index) => (

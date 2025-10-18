@@ -7,8 +7,8 @@ export const styleNavApp = {
     boxShadow: "none",
     borderBottom: `0.5px solid ${alpha(theme.palette.divider, 0.3)}`,
     position:"fixed",
-     top: "35px", 
-  zIndex: theme.zIndex.appBar + 1,
+    top: "35px", 
+    zIndex: theme.zIndex.appBar + 1,
   //  marginTop: open ? 0 : -48,
   }),
   /////////////////////////////////// CONTAINER APP BAR STYLE

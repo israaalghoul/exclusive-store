@@ -5,6 +5,7 @@ import ProductsService from "../../products/services/api";
 import { ProductList } from "../../products/components/product-list";
 import { useQuery } from "@tanstack/react-query";
 import { appRoutes } from "../../../routes/index";
+import {Loader} from "../../../shared/components/loader";
 
 export default function CategoryDetailPage() {
   const { id } = useParams();
@@ -27,7 +28,13 @@ export default function CategoryDetailPage() {
     const nextPage = Math.max(1, page + next);
     setSearchParams({ page: nextPage, limit });
   };
-
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center',padding:"8.0rem" }}>
+                <Loader />
+            </div>
+        )
+    }
   return (
     <Box sx={{ bgcolor: "#fff", pt: { xs: 2, md: 6 }, py: { xs: 2, md: 10 } }}>
       {/* ===== Breadcrumb ===== */}

@@ -86,8 +86,8 @@ export function SearchPopup() {
   }, [open, results, selectedIndex]);
   return (
     <>
-      <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogContent sx={{ p: 2 }}>
+      <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="sm"  >
+        <DialogContent sx={{ p: 2,minHeight:"30.0rem" }}>
           {/* Upper Section*/}
           <Box display="flex" alignItems="center" mb={2}>
             <Box sx={{ flex: 1 }}>

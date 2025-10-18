@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import CategoriesService from "../services/api";
+import { Loader } from "../../../shared/components/loader";
 
 export default function CategoryPage() {
   const theme = useTheme();
@@ -39,6 +40,13 @@ export default function CategoryPage() {
       return s;
     });
   };
+      if (isLoading) {
+          return (
+              <div style={{ display: 'flex', justifyContent: 'center',padding:"8.0rem" }}>
+                  <Loader />
+              </div>
+          )
+      }
   return (
     <Box
       sx={(theme) => ({

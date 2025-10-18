@@ -76,7 +76,12 @@ const CountdownTimer = () => {
       alignItems="center"
       justifyContent="center"
       gap={2.125}
-      sx={{ fontFamily: "Inter, sans-serif" }}
+      sx={{
+        fontFamily: "Inter, sans-serif",
+        "@media (max-width:700px)": {
+          display: "none",
+        },
+      }}
     >
       {labels.map((label, index) => (
         <React.Fragment key={label}>

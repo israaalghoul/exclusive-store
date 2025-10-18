@@ -75,9 +75,15 @@ export function Navbar() {
   }, [location.pathname]);
 
   return (
-    <Box sx={{ flexGrow: 1, pt: open ? "130px" : "85px" , "@media screen and (max-width: 320px)": {
-    pt: "108px",
-  },}}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        pt: open ? "120px" : "85px",
+        "@media (max-width:320px)": {
+          pt: "100px",
+        },
+      }}
+    >
       <Collapse in={open}>
         <SaleBar onClick={() => setOpen(false)}>
           <div>

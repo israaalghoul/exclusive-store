@@ -6,6 +6,7 @@ import { useNavbarStore } from "../navbarStore";
 import { AccountMenu } from "../../../features/account-menu/component";
 import TopIcon from "../../../shared/components/up-icon";
 import { Box } from "@mui/material";
+import { ScrollToTop } from "../../components/scroll-to-top";
 export function LayoutContainer({ children }) {
   // expose store so pages/components can set hideIcons
   const setHideIcons = useNavbarStore((s) => s.setHideIcons);
@@ -14,6 +15,7 @@ export function LayoutContainer({ children }) {
   };
   return (
     <>
+      <ScrollToTop />
       <Navbar />
       <SearchPopup />
       <AccountMenu />
